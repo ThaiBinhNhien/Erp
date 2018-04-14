@@ -75,7 +75,7 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => null,
+	'hostname' => '127.0.0.1',
 	'username' => 'root',
 	'password' => 'erptolinen2018',
 	'database' => 'erp_tolinen',
