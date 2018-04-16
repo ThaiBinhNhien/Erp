@@ -106,7 +106,7 @@
             } 
         }
         ?>
-	<a href="<?php echo(base_url('purchase/editOrder?id='.$id)); ?>" class="print right <?php if($has_import||$disable) echo 'disabled'; ?>" onclick=" return <?php if($has_import||$disable) echo 'false';?> ;">
+	<a href="<?php echo(base_url('purchase/editOrder?id='.$id)); ?>" class="print right <?php if($has_import||$disable||$is_confirm) echo 'disabled'; ?>" onclick=" return <?php if($has_import||$disable) echo 'false';?> ;">
         編集 
     </a>                
     <a href="<?php echo(base_url('purchase/processing-purchase?id='.$id)); ?>" class="print right <?php if(!$is_confirm||$disable) echo 'disabled' ?>" onclick=" return <?php if(!$is_confirm||$disable) echo 'false';?> ;">入庫処理</a>

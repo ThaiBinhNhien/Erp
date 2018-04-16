@@ -30,7 +30,7 @@ class Dashboard_model extends VV_Model
 		$array_where = array(SL_STATUS => 1);
 		$string_where_in = "";
 		if($is_customer == null || $is_customer == 2) {
-			$string_where_in = "".SL_CUSTOMER_ID . " IN ( SELECT `".CUSTOMER_DEPARTMENT."`.`".CD_CUSTOMER_ID."` FROM `".CUSTOMER_DEPARTMENT."` WHERE `".CD_CUSTOMER_ID."`=`".SL_CUSTOMER_ID."` AND `".CD_USER_ID."`='".$name_personal."')";
+			$string_where_in = "`".SALES_LEDGER."`.".SL_DEPARTMENT_CODE . " IN ( SELECT `".CUSTOMER_DEPARTMENT."`.`".CD_DEPARTMENT_CODE."` FROM `".CUSTOMER_DEPARTMENT."` WHERE `".CUSTOMER_DEPARTMENT."`.`".CD_CUSTOMER_ID."`=`".SALES_LEDGER."`.`".SL_CUSTOMER_ID."` AND `".CUSTOMER_DEPARTMENT."`.`".CD_USER_ID."`='".$name_personal."')";
 		} else {
 			$string_where_in = array(SL_CUSTOMER_ID => $customer);
 		}
@@ -41,6 +41,7 @@ class Dashboard_model extends VV_Model
 				->where($string_where_in)
 				->limit(1000)
 				->order_by(SL_DATE_CHANGE, 'DESC');
+				
 		return $this->db->get()->result_array();
 	}
 	public function get_detail_product($id_order)

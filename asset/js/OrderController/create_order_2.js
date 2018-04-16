@@ -783,7 +783,7 @@ $(document).ready(function(){
             return array;
         }
     };
-    xyz = $('#customer').selectpicker({title:'Choose Customer'}).ajaxSelectPicker(optionsCustomer);
+    xyz = $('#customer').selectpicker({title:'得意先名選択'}).ajaxSelectPicker(optionsCustomer);
     xyz.trigger('change').data('AjaxBootstrapSelect').list.cache = {};
     $("#order_form").validate({
             rules : {

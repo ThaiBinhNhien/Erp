@@ -317,56 +317,86 @@ class PurchaseController extends VV_Controller {
 		//$this->db->insert_batch(T_ISSUE,$T_出荷);
 	}
 
-	public function get_number_import()
+	//import bảng xuất nhập kho shirre
+	public function import_info_tb_buying_shirre()
 	{
-		ini_set('max_execution_time', 600);
-		$check_id_has_process = array();//id bảng xuất nhập kho đã thao tác
-		$query = "select * from 入出庫情報 "
-				." where (発注数 > 0 or 入庫数 > 0)"
-				." and (発注伝票ID > 0 or 入庫伝票ID > 0)"
-				." order by 商品ID ASC, 処理日 ASC "
-				." LIMIT 1000 ;";
-		$list_info_buying = $this->db->query($query)->result();
-		echo count($list_info_buying);
-		$i = 0;
-		$group_by_product = array();
-		foreach ($list_info_buying as $id => $row) {
-			if($id == 0){}
-			else if($list_info_buying[$id]->商品ID != $list_info_buying[$id-1]->商品ID) $i++;
-			$group_by_product[$i][] = $row;
+		include 'asset/xuat_nhap_kho_shirre.php';
+		foreach ($T_入出庫情報 as &$tb) {
+			unset($tb['id']);
+			unset($tb['受注伝票ID']);
+			unset($tb['受注数']);
 		}
-		$arr_update_id = array();
-		foreach ($group_by_product as $group_by_date) {//danh sách sort theo id sản phẩm tăng dần
-			foreach ($group_by_date as $value2) {//danh sách sort theo ngày tăng dần
-				$id_import_tb = null;
-				$total_import = 0;
-				if($value2->発注伝票ID > 0 && !in_array($value2->入出庫ID,$check_id_has_process)){
-					$check_id_has_process[] = $value2->入出庫ID;
-					foreach ($group_by_date as $k => $value3) {
-						if($value3->入庫伝票ID > 0 && $total_import+$value3->入庫数 <= $value2->発注数 && !in_array($value3->入出庫ID, $check_id_has_process)){
-							$check_id_has_process[] = $value3->入出庫ID;
-							if($id_import_tb == null) $id_import_tb = $value3->入庫伝票ID;
-							$arr_update_id[] = array(
-								"tb_id" => $value3->入出庫ID,
-								"product_id" => $value3->商品ID,
-								"old_import_id" => $value3->入庫伝票ID,
-								"new_import_id" => $value2->発注伝票ID,
-								"order_id" => $value2->発注伝票ID
-							);
-							$value3->入庫伝票ID = $id_import_tb;
-							$total_import += $value3->入庫数;
-						}
-						if($value3->入庫伝票ID > 0 && !in_array($value3->入出庫ID, $check_id_has_process)){
+		//$this->db->insert_batch('t_入出庫情報',$T_入出庫情報);
+	}
 
-						}
+	//import bảng xuất nhập kho senzaito
+	public function import_info_tb_buying_senzaito()
+	{
+		include 'asset/xuat_nhap_kho_senzaito.php';
+		foreach ($T_入出庫情報 as &$tb) {
+			unset($tb['id']);
+			if($tb['発注伝票ID'] > 0) $tb['発注伝票ID'] += 17000;
+			if($tb['入庫伝票ID'] > 0) $tb['入庫伝票ID'] += 18000;
+			if($tb['出荷伝票ID'] > 0) $tb['出荷伝票ID'] += 17000;
+		}
+		//$this->db->insert_batch('t_入出庫情報',$T_入出庫情報);
+	}
+
+	// cập nhật id sản phẩm của bảng thông tin xuất nhập kho
+	public function update_product_id()
+	{
+		$file = fopen(base_url("asset/update_id_product.csv"), "r");
+		$list_product_id = array();
+		while (!feof($file)) {
+			$csv_data = fgetcsv($file);
+			$list_product_id[] = array(
+				'supplier_id' => $csv_data[0],
+				'sales_des_id' => $csv_data[1],
+				'product_id_old' => $csv_data[2],
+				'product_id_new' => $csv_data[3]
+			);
+		}
+		$query = "select ".T_ORDER.".`".TO_VENDOR_ID."` as supplier_id,".T_ISSUE.".`".SHIP_DISTRIBUTOR_ID."` as sales_des_id, "
+				.T_GOODS_RECEIPT_INFORMATION.".`".TGRI_ID."` as tb_id, "
+				.T_GOODS_RECEIPT_INFORMATION.".`".TGRI_PRODUCT_ID."` as product_id, "
+				.T_GOODS_RECEIPT_INFORMATION.".`".TGRI_ORDER_SLIP_ID."` as order_id, "
+				.T_GOODS_RECEIPT_INFORMATION.".`".TGRI_OUTBOUND_SLIP_ID."` as warehouse_id "
+				." from ".T_GOODS_RECEIPT_INFORMATION." "
+				." left join ".T_ORDER." on ".T_GOODS_RECEIPT_INFORMATION.".`".TGRI_ORDER_SLIP_ID."` = ".T_ORDER.".`".TO_ID."` "
+				." left join ".T_ISSUE." on ".T_GOODS_RECEIPT_INFORMATION.".`".TGRI_OUTBOUND_SLIP_ID."` = ".T_ISSUE.".`".SHIP_ID."` ;";
+		$tb_info = $this->db->query($query)->result();
+		$tb_update = array();
+		$product_id_empty = array();
+		foreach ($tb_info as $key => $value) {
+			foreach ($list_product_id as $product) {
+				if($value->order_id > 0){
+					if($value->product_id == $product['product_id_old'] && $value->supplier_id == $product['supplier_id']){
+						$tb_update[] = array(
+							TGRI_ID => $value->tb_id,
+							TGRI_PRODUCT_ID => $product['product_id_new']
+						);
+						unset($tb_info[$key]);
+						break;
+					}
+				}
+				if($value->warehouse_id > 0){
+					if($value->product_id == $product['product_id_old'] && in_array($value->sales_des_id, explode(' ', $product['sales_des_id']))){
+						$tb_update[] = array(
+							TGRI_ID => $value->tb_id,
+							TGRI_PRODUCT_ID => $product['product_id_new']
+						);
+						unset($tb_info[$key]);
+						break;
 					}
 				}
 			}
 		}
+		//$this->db->update_batch(T_GOODS_RECEIPT_INFORMATION,$tb_update,TGRI_ID);
+	}
 
-		foreach ($arr_update_id as $key => $value) {
-			print_r($value);echo "<br>";
-		}
+	public function add_import_tb()
+	{
+		# code...
 	}
 
 	const no_template = 'no-template';
@@ -1209,7 +1239,7 @@ class PurchaseController extends VV_Controller {
 		$data['content'] = 'purchase/editOrder';
 		if(!is_numeric($id)) redirect('/purchase');
 		$order = $this->Buying->get_detail_order_purchase($id);
-		if (empty($order)) {
+		if (empty($order) || $order->{TO_FORM} == 2) {
 			redirect('/purchase');
 		}
 

@@ -91,9 +91,9 @@ function getBySearch(){
 				for(var i=0; i<result.length; i++){
 					html += '<tr>';
 					if(result[i]['type'] == 1){
-						html += '<td><a href="'+detailUrl1+"?id="+result[i]['id']+'" target="_blank" style="text-decoration: underline;">'+result[i]['id']+'</a><input type="hidden" name="type" value="'+result[i]['type']+'"></td>';
+						html += '<td><a href="'+detailUrl1+"?id="+result[i]['id']+'" target="_blank">'+result[i]['id']+'</a><input type="hidden" name="type" value="'+result[i]['type']+'"></td>';
 					}else{
-						html += '<td><a href="'+detailUrl2+"?id="+result[i]['id']+'" target="_blank" style="text-decoration: underline;">'+result[i]['id']+'</a><input type="hidden" name="type" value="'+result[i]['type']+'"></td>';
+						html += '<td><a href="'+detailUrl2+"?id="+result[i]['id']+'" target="_blank">'+result[i]['id']+'</a><input type="hidden" name="type" value="'+result[i]['type']+'"></td>';
 					}
 					if(result[i]['add_number'] == null){
 						result[i]['add_number'] = 0;
@@ -104,7 +104,7 @@ function getBySearch(){
 					html += '<td>'+formatDate(result[i]['order_date'])+'</td>';
                     html += '<td>'+result[i]['customer_name']+'</td>';
                     html += '<td>'+(result[i]['department'] == null?'':result[i]['department'])+'</td>';
-                    html += '<td>'+(result[i]['created_name'] == null?'':result[i]['created_name'])+'</td>';
+                    html += '<td>'+(result[i]['created_name'] == null?result[i]['user_id']:result[i]['created_name'])+'</td>';
                     html += '<td>'+(result[i]['status'] == "1"?'確定':'<span style="color:red">一時保存</span>')+'</td>';
                     html += '<td>'+(parseFloat(result[i]['order_number'])+parseFloat(result[i]['add_number']))+'</td>';
                     html += '<td>'+result[i]['delivery_number']+'</td>';
@@ -195,13 +195,13 @@ function renewScroll(){
 						 for(var i=0; i<result.length; i++){
 						   var html = '<tr>';
 						   if(result[i]['type'] == 1){
-								html += '<td><a href="'+detailUrl1+"?id="+result[i]['id']+'" target="_blank" style="text-decoration: underline;">'+result[i]['id']+'</a><input type="hidden" name="type" value="'+result[i]['type']+'"></td>';
+								html += '<td><a href="'+detailUrl1+"?id="+result[i]['id']+'" target="_blank">'+result[i]['id']+'</a><input type="hidden" name="type" value="'+result[i]['type']+'"></td>';
 							}else{
-								html += '<td><a href="'+detailUrl2+"?id="+result[i]['id']+'" target="_blank" style="text-decoration: underline;">'+result[i]['id']+'</a><input type="hidden" name="type" value="'+result[i]['type']+'"></td>';
+								html += '<td><a href="'+detailUrl2+"?id="+result[i]['id']+'" target="_blank">'+result[i]['id']+'</a><input type="hidden" name="type" value="'+result[i]['type']+'"></td>';
 							} html += '<td>'+formatDate(result[i]['order_date'])+'</td>';
 						   html += '<td>'+result[i]['customer_name']+'</td>';
 						   html += '<td>'+(result[i]['department'] == null?'':result[i]['department'])+'</td>';
-						   html += '<td>'+(result[i]['created_name'] == null?'':result[i]['created_name'])+'</td>';
+						   html += '<td>'+(result[i]['created_name'] == null?result[i]['user_id']:result[i]['created_name'])+'</td>';
 						   html += '<td>'+(result[i]['status'] == "1"?'確定':'<span style="color:red">一時保存</span>')+'</td>';
 						   html += '<td>'+result[i]['order_number']+'</td>';
 						   html += '<td>'+result[i]['delivery_number']+'</td>';

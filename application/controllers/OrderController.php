@@ -20,6 +20,7 @@ class OrderController extends VV_Controller {
         $this->LOGIN_INFO = $this->session->userdata('login-info');
         $this->customer = $this->customer_model->getByUser($this->LOGIN_INFO[U_ID]);
         $this->customer_account = $this->session->userdata('customer-info');
+        $this->level = $this->session->userdata('request-level');
         $this->cus_type =  0;
         $this->base_id = $this->LOGIN_INFO[U_BASE_CODE];
         if($this->customer != null){
@@ -44,14 +45,22 @@ class OrderController extends VV_Controller {
         $data['title'] = $this->lang->line('receive_order');
         $data['content'] ='orders/receiveOrder';
         if($this->customer_account == null){
+            
             $data['list_cus'] = $this->customer_model->getAll();
             //$data['list_user'] = $this->user_model->getAll();
+            if($this->level == "P"){
+                $data['list_user'] = $this->user_model->getUserForOrderManager($this->LOGIN_INFO[U_ID]);
+                $data['list_user2'] = $this->user_model->getUserForCustomer($this->LOGIN_INFO[U_ID]);
+            } else {
+                $data['list_user'] = $this->user_model->getAll();
+            }
             $data['cus_type'] = $this->cus_type;
         }
         else{
 
             $data['list_cus'] = array($this->customer_account);
-            //$data['list_user'] = $this->user_model->getAll();
+            $data['list_user'] = $this->user_model->getUserByCustomer($this->customer_account['得意先コード']);
+            $data['list_user2'] = $this->user_model->getUserByCustomer2($this->customer_account['得意先コード']);
             $data['cus_type'] = $this->cus_type;
             if($this->order_model->getByCreatedId($this->LOGIN_INFO[U_ID]) == NULL){
                 if($data['cus_type'] == 1)
@@ -61,8 +70,7 @@ class OrderController extends VV_Controller {
                 }
             }
         }
-        $data['list_user'] = $this->user_model->getUserForOrderManager($this->LOGIN_INFO[U_ID]);
-        $data['list_user2'] = $this->user_model->getUserForCustomer($this->LOGIN_INFO[U_ID]);
+        
         $data['list_department'] = $this->customer_department_model->getDepartment();
         //$data['list_user'] = $this->customer_model->getAll();
         $this->load->view('templates/master',$data);
@@ -1301,8 +1309,12 @@ class OrderController extends VV_Controller {
         $data['content'] ='orders/checklist';
         $data['list_cus'] = $this->customer_model->getAll();
         //$data['list_user'] = $this->user_model->getAll();
-        $data['list_user'] = $this->user_model->getUserForOrderManager($this->LOGIN_INFO[U_ID]);
-        $data['list_user2'] = $this->user_model->getUserForCustomer($this->LOGIN_INFO[U_ID]);
+        if($this->level == "P"){
+            $data['list_user'] = $this->user_model->getUserForOrderManager($this->LOGIN_INFO[U_ID]);
+            $data['list_user2'] = $this->user_model->getUserForCustomer($this->LOGIN_INFO[U_ID]);
+        } else {
+            $data['list_user'] = $this->user_model->getAll();
+        }
         $data['cus_type'] = $this->cus_type;
         $data['list_department'] = $this->customer_department_model->getDepartment();
         $this->load->view('templates/master',$data);

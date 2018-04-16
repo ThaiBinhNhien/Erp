@@ -145,7 +145,7 @@ $route['sale/ajax_get_list_product']['POST'] = 'SaleController/ajax_get_list_pro
 $route['sale/print-sale'] = 'SaleController/print_sale';
 
 $route['purchase'] = 'PurchaseController/index';
-$route['purchase/get_number_import'] = 'PurchaseController/get_number_import';
+$route['purchase/update_product_id'] = 'PurchaseController/update_product_id';
 $route['purchase/detail-purchase'] = 'PurchaseController/detail_purchase';
 $route['purchase/print_purchase_order'] = 'PurchaseController/print_purchase_order';
 $route['purchase/print_pdf_purchase_order']['POST'] = 'PurchaseController/print_pdf_purchase_order';

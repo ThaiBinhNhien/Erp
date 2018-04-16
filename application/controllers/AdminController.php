@@ -67,6 +67,7 @@ class AdminController extends VV_Controller {
 				$customer = $this->customer_account == null? null:$this->customer_account[CUS_ID];
         		$is_customer = $this->customer_account == null? 2:1;
 				$array_order_list = $this->Dash_Board->get_order_personal_list_by_date($user_name[U_ID],$customer,$is_customer);
+				//die(var_dump($this->db->last_query()));
 			}	
 		}
 		return $array_order_list;

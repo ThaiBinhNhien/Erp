@@ -84,9 +84,27 @@ class User extends VV_Model
 			SELECT * FROM `ユーザマスタ` U
 			INNER JOIN (SELECT DISTINCT `担当者` FROM `得意先部署` D 
 			WHERE D.`得意先コード` IN (SELECT DISTINCT `得意先コード` FROM `得意先部署`
-			WHERE `担当者` = ".$login_id.")) T ON U.`ユーザID`=T.`担当者`  
+			WHERE `部署コード` = D.`部署コード` AND `担当者` = '".$login_id."')) T ON U.`ユーザID`=T.`担当者`   
 		";
 		return $this->db->query($query1)->result_array();
+	}
+
+	public function getUserByCustomer($login_id){
+		$query3 = "
+			SELECT * FROM `ユーザマスタ` U
+			INNER JOIN (SELECT DISTINCT `担当者` FROM `得意先部署` D 
+			WHERE D.`得意先コード` = '".$login_id."') T ON U.`ユーザID`=T.`担当者`   
+		";
+		return $this->db->query($query3)->result_array();
+	}
+
+	public function getUserByCustomer2($login_id){
+		$query4 = "
+		SELECT * FROM `ユーザマスタ` U
+		INNER JOIN (SELECT `外注` FROM `得意先` A
+		WHERE A.`得意先コード` = '".$login_id."') T2 ON U.`ユーザID`=T2.`外注` 
+		";
+		return $this->db->query($query4)->result_array();
 	}
 
 	public function getUserForCustomer($login_id)
@@ -95,7 +113,7 @@ class User extends VV_Model
 			SELECT * FROM `ユーザマスタ` U
 			INNER JOIN (SELECT `外注` FROM `得意先` A
 			INNER JOIN `得意先部署` B ON A.`得意先コード` = B.`得意先コード`
-			WHERE B.`担当者` = ".$login_id.") T2 ON U.`ユーザID`=T2.`外注` 
+			WHERE B.`担当者` = '".$login_id."') T2 ON U.`ユーザID`=T2.`外注` 
 		";
 		return $this->db->query($query2)->result_array();
 	}
