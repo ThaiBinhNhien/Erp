@@ -1297,7 +1297,8 @@ jQuery.validator.setDefaults({
 });
 
 // Notifition
-var config_location_hostname = 'http://'+window.location.hostname+':3000';
+//var config_location_hostname = 'http://'+window.location.hostname+':3000';
+var config_location_hostname = 'https://erptolinennode.appspot.com/';
 function add_notification_realtime(data){
     var socket = io.connect(config_location_hostname);
 
@@ -1321,28 +1322,6 @@ function add_notification_realtime(data){
         created_at: data.created_at,
         id: data.id
     });
-}
-
-function setCookie(cname, cvalue, exdays) {
-    var d = new Date();
-    d.setTime(d.getTime() + (exdays * 24 * 60 * 60 * 1000));
-    var expires = "expires="+d.toUTCString();
-    document.cookie = cname + "=" + cvalue + ";" + expires + ";path=/";
-}
-
-function getCookie(cname) {
-    var name = cname + "=";
-    var ca = document.cookie.split(';');
-    for(var i = 0; i < ca.length; i++) {
-        var c = ca[i];
-        while (c.charAt(0) == ' ') {
-            c = c.substring(1);
-        }
-        if (c.indexOf(name) == 0) {
-            return c.substring(name.length, c.length);
-        }
-    }
-    return "";
 }
 
 $(document).ready(function(){
@@ -1373,15 +1352,11 @@ $(document).ready(function(){
                 $('#list_message_notification').html(message_html);
             }
 
-            // Connect socket
-            //var get_socket = getCookie("socket");         
+            // Connect socket    
             var socket = io.connect(config_location_hostname);
-            //console.log(get_socket);
 
             // connect by token
             socket.on('connect', function(){
-                //setCookie("sessionID",socket.id,10);
-                //writeCookie('sessionID',socket.id);
                 socket.emit('authenticate', {token: dataajax.token});
             });
 
@@ -1479,6 +1454,10 @@ $(document).mouseup(function (e) {
      $menu.hide();
   }
  });
+
+$("#navi ul li").click(function() {
+    $(this).find("a").click();
+});
 
 // Setting for message
 var message_confirm_save_field = "<?= $this->lang->line('message_confirm_save_field')?>";
