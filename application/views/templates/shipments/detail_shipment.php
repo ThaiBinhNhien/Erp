@@ -131,7 +131,14 @@ $varNum = "num";
         <tr>
             <td><?php echo $value['customer_name'];?></td>
             <td><?php echo $value['department_name'];?></td>
+            <?php
+            if(empty($value['product_code']) && empty($value['product_name']) && empty($value['product_format']) && empty($value['product_color'])) {
+                echo '<td class="field_delete">'.$this->lang->line("message_delete_product").'</td>';
+            } else {
+            ?>
             <td><?php echo $value['product_code'];?></td>
+            <?php } ?>
+            
             <td title="<?php echo $value['product_container'];?>"><?php echo $value['product_name'];?></td>
             <td><?php echo $value['product_format'];?></td>
             <td><?php echo $value['product_color'];?></td>

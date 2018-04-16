@@ -18,6 +18,24 @@ th{
 .sum-col .headcol,.sum-col .six-col,.sum-col .sev-col{
   line-height: 2.5;
 }
+
+button{
+  height:31px;
+}
+.btn-group{
+  width: calc(100% - 25px) !important;
+}
+.filter-option{
+  margin-top:-1%;
+}
+
+.no-sum-col, .sev-col{
+  line-height: 2.5;
+}
+.productselect1 {
+  text-align: center;
+}
+
 </style>
 <div class="wrapper-contain order create-order detail-order">
 <div class="row">
@@ -57,7 +75,7 @@ th{
           <label  class="col-md-4 control-label">発注日:</label>
           <div class="col-md-8">
 			<span class="form-control form-control-input bottom-margin">
-            <input  class="orderDate" name="order_date" id="order_date" readonly="">
+            <input  class="orderDate input__select__control" name="order_date" id="order_date" readonly="">
            <span class=" icon-large icon-calendar "></span>
             </span>
           </div>
@@ -69,7 +87,7 @@ th{
         <div class="form-group">
           <label  class="col-md-4 control-label">得意先名:</label>
           <div class="col-md-8">
-            <select class="selectpicker customer_valid" name="customer" <?= count($list_customer) == 1?'disabled':'' ?> data-live-search="true" title="" data-live-search-placeholder="Search" id="customer">
+            <select class="selectpicker customer_valid input__select__control" name="customer" <?= count($list_customer) == 1?'disabled':'' ?> data-live-search="true" title="" data-live-search-placeholder="Search" id="customer">
             <?php foreach ($list_customer as $key => $value) {
               echo '<option '.(count($list_customer) == 1?'selected':'' ).' value="'.$value[CUS_ID].'">'.$value[CUS_CUSTOMER_NAME].'</option>';
             }
@@ -93,7 +111,7 @@ th{
           <label  class="col-md-4 control-label">納品予定日:</label>
           <div class="col-md-8">
             <span class="form-control form-control-input bottom-margin">
-            <input  class="orderToDate" name="delivery_expected" id="delivery_expected" readonly>
+            <input  class="orderToDate input__select__control" name="delivery_expected" id="delivery_expected" readonly>
            <span class=" icon-large icon-calendar "></span>
             </span>
           </div>
@@ -108,7 +126,7 @@ th{
         </div>
       </div>
 		<div class="col-sm-2 col-md-1 col-lg-1">
-        <a href="#" class="print" id="btn_prouduct_set" style="margin:0;">表示</a>	
+        <a class="print" id="btn_prouduct_set" style="margin:0;">表示</a>	
       </div>
       
     </div>
@@ -135,7 +153,7 @@ th{
           
       </div>
       <div class="col-sm-2 col-md-1 col-lg-1">
-        <a href="#" id="add_floor" class="print" style="margin: 0;" >フロア作成</a>  
+        <a id="add_floor" class="print" style="margin: 0;" >フロア作成</a>  
       </div>
     </div>
     </fieldset>
@@ -182,7 +200,7 @@ th{
         <td class="temp"></td>
 
         <td class="six-col addition"><input name="addition0" type="text"/></td>
-        <td class="sev-col" ></td>
+        <td class="sev-col" style="line-height: 32px;"></td>
       </tr>
        <tr class="sum-col">
         <td class="headcol">合計</td>
@@ -203,10 +221,10 @@ th{
 </div>
   </form>
 <div class="row margin-bottom-table">
-	<a href="#" class="print left" id="insert">行挿入 </a>
-	<a href="" class="print left" id="remove">行削除 </a>
-	<a href="#dialog-form" class="print save-new-order right">保存 </a>
-	<a href="#dialog-form" class="print save-temp-order right">一時保存 </a> 
+	<a class="print left" id="insert">行挿入 </a>
+	<a class="print left" id="remove">行削除 </a>
+	<a class="print save-new-order right">保存 </a>
+	<a class="print save-temp-order right">一時保存 </a> 
 </div>
 	<div class="row margin-bottom-table margin-top-table ">
 		<a href="<?php echo site_url('/receive-order');?>" class="print right">戻る  </a>
@@ -230,7 +248,7 @@ td .bootstrap-select:not([class*=col-]):not([class*=form-control]):not(.input-gr
 .bootstrap-select button{
    // height: 30px;
 }
-
+ 
 </style>
 <script>
  var viewUrl =  "<?= base_url('receive-order')?>";

@@ -26,6 +26,24 @@ class Department extends VV_Model
 		return $this->getQuery($query);
 	}
 
+	public function getDepartment($customer_id)
+	{
+		$query = 'SELECT distinct P.*
+		FROM `'.DEPARTMENT_LEDGER.'` P 
+		LEFT JOIN `'.CUSTOMER_DEPARTMENT.'` K ON K.`'.CD_DEPARTMENT_CODE.'` = P.`'.DL_DEPARTMENT_CODE.'` ';
+		if(!empty($customer_id)) $query .= ' WHERE K.`'.CD_CUSTOMER_ID.'` = '.$customer_id;
+
+		return $this->getQuery($query);
+	}
+
+	public function getCustomer($department_id)
+	{
+		$query = "select distinct ".CUSTOMER.".* from ".CUSTOMER_DEPARTMENT." "
+				." left join `".CUSTOMER."` on ".CUSTOMER_DEPARTMENT.".`".CD_CUSTOMER_ID."` = ".CUSTOMER.".`".CUS_ID."` ";
+		if(!empty($department_id)) $query .= " where ".CUSTOMER_DEPARTMENT.".`".CD_DEPARTMENT_CODE."` = '".$department_id."' ";
+		return $this->getQuery($query);
+	}
+
 	//lấy phòng bang từ mã phòng bang
 	public function get_by_id($id)
 	{

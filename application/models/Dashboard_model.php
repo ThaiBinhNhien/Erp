@@ -22,26 +22,33 @@ class Dashboard_model extends VV_Model
 				->order_by(SL_DATE_CHANGE, 'DESC');
 		$query = $this->db->get()->result_array();
 		return $query;
-	}
+	} 
 
 	//get data revicen order of personal!
-	public function get_order_personal_list_by_date($name_personal)
+	public function get_order_personal_list_by_date($name_personal,$customer=null,$is_customer=null) 
 	{
-		$array_where = array(SL_USER_ID => $name_personal, SL_STATUS => 1);
+		$array_where = array(SL_STATUS => 1);
+		$string_where_in = "";
+		if($is_customer == null || $is_customer == 2) {
+			$string_where_in = "".SL_CUSTOMER_ID . " IN ( SELECT `".CUSTOMER_DEPARTMENT."`.`".CD_CUSTOMER_ID."` FROM `".CUSTOMER_DEPARTMENT."` WHERE `".CD_CUSTOMER_ID."`=`".SL_CUSTOMER_ID."` AND `".CD_USER_ID."`='".$name_personal."')";
+		} else {
+			$string_where_in = array(SL_CUSTOMER_ID => $customer);
+		}
+
 		$this->db->select()
 				->from(SALES_LEDGER)
 				->where($array_where)
+				->where($string_where_in)
 				->limit(1000)
 				->order_by(SL_DATE_CHANGE, 'DESC');
-		$query = $this->db->get()->result_array();
-		return $query;
+		return $this->db->get()->result_array();
 	}
 	public function get_detail_product($id_order)
 	{
 		$this->db->select()
 				->from(ORDER_DETAIL.' odt')
 				->where('odt.'.OD_ORDER_ID, $id_order)
-				->join(PRODUCT_LEDGER.' prd', 'odt.'.OD_PRODUCT_CODE. ' = '.'prd.'.PL_PRODUCT_ID)
+				->join(PRODUCT_LEDGER.' prd', 'odt.'.OD_PRODUCT_CODE. ' = '.'prd.'.PL_PRODUCT_ID,'left')
 				->limit(20);
 		$query = $this->db->get()->result_array();
 		return $query;
@@ -65,7 +72,7 @@ class Dashboard_model extends VV_Model
 		$this->db->select()
 				->from(ORDER_SHIPMENT_DETAIL.' odt')
 				->where(OSHD_ORDER_ID, $id_shipment)
-				->join(PRODUCT_LEDGER.' prd', 'odt.'.OD_PRODUCT_CODE. ' = '.'prd.'.PL_PRODUCT_ID)
+				->join(PRODUCT_LEDGER.' prd', 'odt.'.OD_PRODUCT_CODE. ' = '.'prd.'.PL_PRODUCT_ID,'left')
 				->limit(20);
 		$query = $this->db->get()->result_array();
 		return $query;
@@ -103,7 +110,7 @@ class Dashboard_model extends VV_Model
 				->from(INVOICE_DETAIL.' idt' )
 				->where('idt.'.ID_INVOICE_ID, $id_revenue)
 				->join(ORDER_DETAIL.' odt', 'idt.`'.ID_ORDER_ID. '`='.'odt.'.OD_ORDER_ID)
-				->join(PRODUCT_LEDGER.' prd', 'odt.`'.OD_PRODUCT_CODE. '`='.'prd.`'.PL_PRODUCT_ID.'`')
+				->join(PRODUCT_LEDGER.' prd', 'odt.`'.OD_PRODUCT_CODE. '`='.'prd.`'.PL_PRODUCT_ID.'`','left')
 				->limit(20);
 		$query = $this->db->get()->result_array();
 		return $query;
@@ -129,7 +136,7 @@ class Dashboard_model extends VV_Model
 				->from(INVOICE_DETAIL.' idt' )
 				->where('idt.'.ID_INVOICE_ID, $id_purchar)
 				->join(ORDER_DETAIL.' odt', 'idt.`'.ID_ORDER_ID. '`='.'odt.'.OD_ORDER_ID)
-				->join(PRODUCT_LEDGER.' prd', 'odt.`'.OD_PRODUCT_CODE. '`='.'prd.`'.PL_PRODUCT_ID.'`')
+				->join(PRODUCT_LEDGER.' prd', 'odt.`'.OD_PRODUCT_CODE. '`='.'prd.`'.PL_PRODUCT_ID.'`','left')
 				->limit(20);
 		$query = $this->db->get()->result_array();
 		return $query;
@@ -137,7 +144,6 @@ class Dashboard_model extends VV_Model
 
 	public function edit_ficker_shipment($id_click)
 	{
-		# code...
 		$this->db->trans_start(); 
 		$data = array(
 			FLAG_FLICKER => 1,

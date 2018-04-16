@@ -821,6 +821,8 @@ class Buying extends VV_Model {
 				TGRI_ORDER_SLIP_ID => $data['order_id'],
 				TGRI_UNIT_PRICE => $data['product_price_array'][$i],
 				TGRI_BASE_CODE => $data['base_code'],
+				TGRI_ACCRUAL_DATE => $data['order_date'],
+				TGRI_A_DISPOSAL_DAY => $data['order_date'],
 				TGRI_ID_SUPPLIER => $data['supplier_id'],
 				TGRI_SALES_DES_ID => $data['sales_des_id'],
 				TGRI_REGISTERED_USER => $data['register_user'],

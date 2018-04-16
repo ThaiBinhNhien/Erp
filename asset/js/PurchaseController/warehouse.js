@@ -96,7 +96,7 @@ function insert_table(json_data) {
 }
 
 $(".search").click(function(){
-
+    /*
      var ending_date   = $('.date-end').val();
      var starting_date = $('.date-start').val();
      if(ending_date!=''&&starting_date==''){
@@ -109,11 +109,7 @@ $(".search").click(function(){
      }
      if($('.search').hasClass('error')){
         return false;
-    }
-
-
-
-
+    }*/
     a_order_no = $('.order_no').val();
     a_distination_id = $('.distination').val();
     a_issuer_id = $('.issuer').val();
@@ -332,3 +328,4 @@ $('.order_no').keyup(function(){
     }
 })
 /*--------------------------------------------------------ending_date validation--------------------------------------------------*/
+keypress_number('#export','.order_no');

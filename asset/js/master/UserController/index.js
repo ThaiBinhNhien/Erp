@@ -35,7 +35,11 @@ function showList(){
                 } else {
                     html += '<td></td>';
                 }
-                html += '<td>'+result[i]['base_name']+'</td>';
+                if(result[i]['base_name'] != null) {
+                    html += '<td>'+result[i]['base_name']+'</td>';
+                } else {
+                    html += '<td></td>';
+                }
                 if(result[i]['address'] != null) {
                     html += '<td>'+result[i]['address']+'</td>';
                 } else {
@@ -106,7 +110,11 @@ function renewScroll(){
                     } else {
                         html += '<td></td>';
                     }
-                    html += '<td>'+result[i]['base_name']+'</td>';
+                    if(result[i]['base_name'] != null) {
+                        html += '<td>'+result[i]['base_name']+'</td>';
+                    } else {
+                        html += '<td></td>';
+                    }
                     if(result[i]['address'] != null) {
                         html += '<td>'+result[i]['address']+'</td>';
                     } else {

@@ -30,6 +30,7 @@ $lang['message_error_not_select_report'] = "帳票を指定してください。
 $lang['message_error_not_select_date_report'] = "期間を指定してください。";
 $lang['message_error_data_null'] = "\u30C7\u30FC\u30BF\u306F\u3042\u308A\u307E\u305B\u3093\u3002"; // データはありません。
 $lang['message_error_requeird_value'] = "{0}は必須です。ご入力ください。";
+$lang['message_delete_product'] = "経営中止品";
 
 /* Shipment */
 $lang['message_check_container_error'] = '右側のコンテナ番号は左側のコンテナ番号以上の値で入力してください。';

@@ -13,7 +13,7 @@ $(document).ready(function(){
 		$(this).helloWorld("売上処理されているため、編集出来ません。",null);
 	});
 	$("#delete2").click(function(){
-		$(this).helloWorld("売上処理されているため、編集出来ません。",null);
+		$(this).helloWorld("売上処理されているため、削除出来ません。",null);
 	});
 
 	// Copy order to shipment

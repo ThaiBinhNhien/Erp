@@ -93,11 +93,7 @@ $('.processing-table').on('keyup blur','.number_purchase',function(){
 	var number_purchase = parseInt($(this).val());
 	var number_order 	= parseInt($(this).parent().prev().text());
 	$(this).parent().find('.popup').remove();
-	if(isNaN(number_purchase)){
-		$(this).closest('td').css('position','relative');
-		$(this).closest('td').append('<div class="popup"><span class="popuptext" id="myPopup">無効な番号</span></div>');
-      	$('table').addClass('error');
-	} else if (number_purchase <= 0){
+	if (number_purchase < 0 || !($(this).val()>=0)){
 		$(this).closest('td').css('position','relative');
 		$(this).parent().append('<div class="popup"><span class="popuptext" id="myPopup">無効な番号</span></div>');
 		$('.save-purchase').addClass('error');
@@ -153,7 +149,7 @@ $('.save-purchase').click(function(){
 	$( ".number_purchase" ).each(function() {
 
   		var number_purchase = parseInt($(this).val());
-  		if(number_purchase <= 0 || isNaN(number_purchase))	{
+  		if(number_purchase < 0 || !(number_purchase>=0))	{
 			$(this).parent().append('<div class="popup"><span class="popuptext" id="myPopup">無効な番号</span></div>');
 			$(this).focus();
 			return required ;

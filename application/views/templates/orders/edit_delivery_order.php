@@ -137,8 +137,14 @@ $count_checklist = 0;
                             $sum_checklist++;
                             $disable_value = "disabled";
                           }
-                            echo '<tr>';
+                            echo '<tr>'; 
+                            
+                          if(empty($value[PL_PRODUCT_CODE_SALE]) && empty($value[PL_PRODUCT_NAME]) && empty($value[PL_STANDARD]) && empty($value[PL_COLOR_TONE]) && empty($value[PL_NUMBER_PACKAGE])) {
+                              echo    '<td class=" field_delete"><input type="hidden" class="get_order_id" value="'.$value[OD_ID].'" /><input type="hidden" class="get_product_id" value="" />'.$this->lang->line("message_delete_product").'</td>';
+                          } else {
                             echo    '<td><input type="hidden" class="get_order_id" value="'.$value[OD_ID].'" /><input type="hidden" class="get_product_id" value="'.$value[DD_PRODUCT_CODE].'" />'.$value[PL_PRODUCT_CODE_SALE].'</td>';
+                          }
+
                             $value_product_name = "";
                             if($value['product_name_delivery'] != null && $value['product_name_delivery'] != "") {
                               $value_product_name = $value['product_name_delivery'];
@@ -326,35 +332,30 @@ $count_checklist = 0;
                               $total += ($value[OD_QUANTITY]+$value[OD_ADD]);
                             }
                         } ?>
+
                         <tr class="sum-col">
                           <td>合計</td>
                           <td></td>
                           <td></td>
                           <td></td>
-                          <?php if($is_gaichyu == true) {
-                            if($is_gaichyu_login == true) {
-                              ?>
-                              <td></td>
-                              <?php
-                            } else {
-                            ?>
-                            <td></td>
-                            <?php } } else { ?>
-                              <td></td>
-                            <?php } ?>
-                          
+                          <td></td>
                           <td><?= number_format($total,2) ?></td>
                           <td></td>
                           <td></td>
-                          <?php if($is_gaichyu_login == true) { ?>
-                            <td id="delivery_total_amount_gaichyu"><?= number_format($sum_total_gaichyu,2) ?></td>
-                          <?php } else { ?>
-                            <td></td>
-                            <td id="delivery_total_amount"><?= number_format($sum_total,2) ?></td>
-                            <?php } ?>
                           
+                          <?php if($is_gaichyu == true) { ?>
+                              <?php if($is_gaichyu_login == true) { ?>
+                                  <td id="delivery_total_amount_gaichyu"><?= ($sum_total_gaichyu > 0) ? number_format($sum_total_gaichyu,2) : "" ?></td>
+                              <?php } else { ?>
+                                  <td></td>
+                                  <td id="delivery_total_amount"><?= ($sum_total > 0) ? number_format($sum_total,2) : "" ?></td>
+                              <?php } ?>
+                          <?php } else { ?>
+                              <td id="delivery_total_amount"><?= ($sum_total > 0) ? number_format($sum_total,2) : "" ?></td>
+                          <?php } ?>
                           <td></td>
                         </tr>
+                        
                     </tbody>
                 </table>
             </div>

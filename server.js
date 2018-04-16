@@ -10,9 +10,26 @@ server.listen(port, function () {
   console.log('Server listening at port %d', port); 
 });
 
+//----set sessionID
+/*var cookie = require("cookie");
+io.set('authorization', function (data, accept) {
+    // check if there's a cookie header
+    if (data.headers.cookie) {
+        // session id, as you specified in the Express setup.
+        data.sessionID = cookie.parse(data.headers["cookie"])["express.sid"];
+    } else {
+       // if there isn't, turn down the connection with a message
+       // and leave the function.
+       return accept('No cookie transmitted.', false);
+    }
+    // accept the incoming connection
+    accept(null, true);
+});*/
 
 // Connection 
 io.on('connection', function (socket) {
+  //console.log('sesssionID', socket.handshake.sessionID);
+  //socket.join(socket.handshake.sessionID);
   socket.auth = false;
   socket.on('authenticate', function(data){
     if(verify_token == data.token) {

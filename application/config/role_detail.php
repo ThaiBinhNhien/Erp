@@ -1178,6 +1178,11 @@ $config['roleOf']['purchase/debt'] = array(
     GR_PURCHASING_MANAGEMENT_PERSONNEL => 'F',
     GR_PURCHASE_MANAGEMENT_OFFICER => 'F'
 );
+$config['roleOf']['pdf_details_buy_buying'] = array(
+    GR_SYSTEM_ADMINISTRATOR => 'F', 
+    GR_PURCHASING_MANAGEMENT_PERSONNEL => 'F',
+    GR_PURCHASE_MANAGEMENT_OFFICER => 'F'
+);
 $config['roleOf']['purchase/detailDebt'] = array(
     GR_SYSTEM_ADMINISTRATOR => 'F', 
     GR_PURCHASING_MANAGEMENT_PERSONNEL => 'F',

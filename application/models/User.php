@@ -78,6 +78,28 @@ class User extends VV_Model
 		return $list_user;
 	}
 
+	public function getUserForOrderManager($login_id)
+	{
+		$query1 = "
+			SELECT * FROM `ユーザマスタ` U
+			INNER JOIN (SELECT DISTINCT `担当者` FROM `得意先部署` D 
+			WHERE D.`得意先コード` IN (SELECT DISTINCT `得意先コード` FROM `得意先部署`
+			WHERE `担当者` = ".$login_id.")) T ON U.`ユーザID`=T.`担当者`  
+		";
+		return $this->db->query($query1)->result_array();
+	}
+
+	public function getUserForCustomer($login_id)
+	{
+		$query2 = "
+			SELECT * FROM `ユーザマスタ` U
+			INNER JOIN (SELECT `外注` FROM `得意先` A
+			INNER JOIN `得意先部署` B ON A.`得意先コード` = B.`得意先コード`
+			WHERE B.`担当者` = ".$login_id.") T2 ON U.`ユーザID`=T2.`外注` 
+		";
+		return $this->db->query($query2)->result_array();
+	}
+
 	public function get_by_id($id)
 	{
 		$this->db->select('*');

@@ -200,7 +200,7 @@ table input{
             max="<?php echo $product->{TGRI_NUMBER_OF_ORDERS} ?>" />
             </td>
             <td>
-            	<input class="back_number" <?php if ($product->amount < $product->{TGRI_NUMBER_OF_ORDERS} | $content_id == 11) {
+            	<input class="back_number" <?php if ($product->amount < $product->{TGRI_NUMBER_OF_ORDERS} | $content_id == 11 | ($content_id == 5 && $has_import == 1)) {
 		echo 'disabled';
 	}
 	?> value="<?php echo $product->back_number ?>"/>
@@ -213,7 +213,7 @@ table input{
 	?></td>
             <td class="price_unit"><?php echo $product->{TGRI_UNIT_PRICE} ?></td>
             <td class="price"></td>
-            <td><input class="datepicker datepicker_ product_date" <?php if ($content_id == 11) {
+            <td><input class="datepicker datepicker_ product_date" <?php if ($content_id == 11 | ($content_id == 5 && $has_import == 1)) {
 		echo "disabled";
 	}
 	?> value="<?php if (empty($product->date_import)) {
@@ -245,7 +245,7 @@ table input{
 	<div class="row first-row">
 		<a href="#" class="print left" style="pointer-events: none;background:grey;border:1px solid grey !important;">行挿入 </a>
 		<a href="#" class="print left" style="pointer-events: none;background:grey;border:1px solid grey !important;">行削除  </a>
-		<a class="print save-purchase right <?php if ($content_id == 11 || ($_SESSION['request-level'] == 'P' && $_SESSION['login_info'].U_ID != $user && $has_import)) {
+		<a class="print save-purchase right <?php if ($content_id == 11 || ($_SESSION['request-level'] == 'P' && $_SESSION['login_info'].U_ID != $user && $has_import) | ($content_id == 5 && $has_import == 1)) {
 	echo 'not-active';
 }
 ?>">保存 </a>

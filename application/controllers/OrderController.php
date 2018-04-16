@@ -45,13 +45,13 @@ class OrderController extends VV_Controller {
         $data['content'] ='orders/receiveOrder';
         if($this->customer_account == null){
             $data['list_cus'] = $this->customer_model->getAll();
-            $data['list_user'] = $this->user_model->getAll();
+            //$data['list_user'] = $this->user_model->getAll();
             $data['cus_type'] = $this->cus_type;
         }
         else{
 
             $data['list_cus'] = array($this->customer_account);
-            $data['list_user'] = $this->user_model->getAll();
+            //$data['list_user'] = $this->user_model->getAll();
             $data['cus_type'] = $this->cus_type;
             if($this->order_model->getByCreatedId($this->LOGIN_INFO[U_ID]) == NULL){
                 if($data['cus_type'] == 1)
@@ -61,6 +61,8 @@ class OrderController extends VV_Controller {
                 }
             }
         }
+        $data['list_user'] = $this->user_model->getUserForOrderManager($this->LOGIN_INFO[U_ID]);
+        $data['list_user2'] = $this->user_model->getUserForCustomer($this->LOGIN_INFO[U_ID]);
         $data['list_department'] = $this->customer_department_model->getDepartment();
         //$data['list_user'] = $this->customer_model->getAll();
         $this->load->view('templates/master',$data);
@@ -81,8 +83,15 @@ class OrderController extends VV_Controller {
         $data['title'] = $this->lang->line('detail_order');
         $data['content']='orders/detailOrder';
         $id = $this->input->get('id');
-        //$id=$this->db->escape($id);
-        $data['master'] = $this->order_model->getById($id);
+        // Check role
+        $count_data_by_role = $this->order_model->getCountCheckRole($id);
+        if(count($count_data_by_role) <= 0) {
+            redirect( base_url('receive-order'), 'refresh');
+            exit();
+        }
+
+        // master order
+        $data['master'] = $this->order_model->getById($id); 
         if($data['master'] == NULL){
             redirect( base_url('receive-order'), 'refresh');
             exit();
@@ -96,9 +105,14 @@ class OrderController extends VV_Controller {
         if($this->level == 'P' && $this->order_model->checkOwner($id,$cus_temp) == null){
             redirect( base_url('receive-order'), 'refresh');
             exit();
-        }
+        } 
         $data['detail']['order_data'] = $this->order_detail_model->getByOrderIdWithFloor($id); 
-        $data['detail']['delivery_data'] = $this->order_detail_model->getByOrderDelivery($id, $this->LOGIN_INFO[U_BASE_CODE], $data['master'][SL_CUSTOMER_ID]);
+        $base_code_price = $this->LOGIN_INFO[U_BASE_CODE];
+        $base_code_arr = $this->customer_department_model->getBaseByCustomerDepartment($data['master'][SL_CUSTOMER_ID],$data['master'][SL_DEPARTMENT_CODE]);
+        if($base_code_arr != null) {
+            $base_code_price = $base_code_arr[0]['base_code'];
+        }
+        $data['detail']['delivery_data'] = $this->order_detail_model->getByOrderDelivery($id, $base_code_price , $data['master'][SL_CUSTOMER_ID]);
         $data['detail']['floor'] = $this->order_detail_floor_model->getFloorNameByOrderId($id);
         $data['master']['orderdate_print'] = $this->helper->readDate($data['master']['order_date']);
         $data['master']['deliveryexpected_date_print'] = $this->helper->readDate($data['master'][SL_DELIVERY_DATE]);
@@ -111,12 +125,12 @@ class OrderController extends VV_Controller {
         if($master_order[0]['is_gaichyu'] == 1 || $master_order[0]['is_gaichyu'] == "1") {
            $data['is_gaichyu'] = true;
 
-           $is_gaichyu_hotel = $this->checkIsRoleHome(GR_SUBCONTRACTOR_LOCAL);
-           $is_gaichyu_tenal = $this->checkIsRoleHome(GR_SUBCONTRACTOR_TENANT);
+           $is_gaichyu_hotel = $this->checkIsGroupRole(GR_SUBCONTRACTOR_LOCAL);
+           $is_gaichyu_tenal = $this->checkIsGroupRole(GR_SUBCONTRACTOR_TENANT);
            if($is_gaichyu_hotel == true || $is_gaichyu_tenal == true) {
             $data['is_gaichyu_login'] = true;
            }
-        }
+        } 
 
         // copy data order -> shipment
         $data['flg_copy'] = $this->delivery_model->checkCopyOrderShipment($id,$data['master'][SL_DEPARTMENT_CODE]);
@@ -127,7 +141,15 @@ class OrderController extends VV_Controller {
         $data['content']='orders/detailOrder2';
         $data['title'] = $this->lang->line('detail_order');
         $id = $this->input->get('id');
-        $data['master'] = $this->order_model->getById($id);
+
+        // Check role
+        $count_data_by_role = $this->order_model->getCountCheckRole($id);
+        if(count($count_data_by_role) <= 0) {
+            redirect( base_url('receive-order'), 'refresh');
+            exit();
+        }
+
+        $data['master'] = $this->order_model->getById($id); 
         if($data['master'] == NULL){
             redirect( base_url('receive-order'), 'refresh');
             exit();
@@ -142,7 +164,12 @@ class OrderController extends VV_Controller {
             exit();
         }
         $data['detail']['order_data'] = $this->order_detail_model->getByOrderId($id);
-        $data['detail']['delivery_data'] = $this->order_detail_model->getByOrderDelivery($id, $this->LOGIN_INFO[U_BASE_CODE], $data['master'][SL_CUSTOMER_ID]);
+        $base_code_price = $this->LOGIN_INFO[U_BASE_CODE];
+        $base_code_arr = $this->customer_department_model->getBaseByCustomerDepartment($data['master'][SL_CUSTOMER_ID],$data['master'][SL_DEPARTMENT_CODE]);
+        if($base_code_arr != null) {
+            $base_code_price = $base_code_arr[0]['base_code'];
+        }
+        $data['detail']['delivery_data'] = $this->order_detail_model->getByOrderDelivery($id, $base_code_price, $data['master'][SL_CUSTOMER_ID]);
         $data['master']['orderdate_print'] = $this->helper->readDate($data['master']['order_date']);
         $data['master']['deliveryexpected_date_print'] = $this->helper->readDate($data['master'][SL_DELIVERY_DATE]);
         $data['master']['deliverydate_print'] = $this->helper->readDate($data['master'][SL_REVENUE_DATE] == NULL?NULL:$data['master'][SL_REVENUE_DATE]);
@@ -154,8 +181,8 @@ class OrderController extends VV_Controller {
         if($master_order[0]['is_gaichyu'] == 1 || $master_order[0]['is_gaichyu'] == "1") {
            $data['is_gaichyu'] = true;
 
-           $is_gaichyu_hotel = $this->checkIsRoleHome(GR_SUBCONTRACTOR_LOCAL);
-           $is_gaichyu_tenal = $this->checkIsRoleHome(GR_SUBCONTRACTOR_TENANT);
+           $is_gaichyu_hotel = $this->checkIsGroupRole(GR_SUBCONTRACTOR_LOCAL);
+           $is_gaichyu_tenal = $this->checkIsGroupRole(GR_SUBCONTRACTOR_TENANT);
            if($is_gaichyu_hotel == true || $is_gaichyu_tenal == true) {
             $data['is_gaichyu_login'] = true;
            }
@@ -359,6 +386,14 @@ class OrderController extends VV_Controller {
         }
         // view edit
         $id = $this->input->get('id');
+
+        // Check role
+        $count_data_by_role = $this->order_model->getCountCheckRole($id);
+        if(count($count_data_by_role) <= 0) {
+            redirect( base_url('receive-order'), 'refresh');
+            exit();
+        }
+
         $cus_temp = $this->customer_account == null? null:$this->customer_account[CUS_ID];
         if($this->level == 'P' && $this->order_model->checkOwner($id,$cus_temp) == null){
             redirect( base_url('receive-order'), 'refresh');
@@ -561,11 +596,20 @@ class OrderController extends VV_Controller {
         }
         // view edit order
         $id = $this->input->get('id');
-        $cus_temp = $this->customer_account == null? null:$this->customer_account[CUS_ID];
-        if($this->order_model->checkOwner($id,$cus_temp) == null){
+
+        // Check role
+        $count_data_by_role = $this->order_model->getCountCheckRole($id);
+        if(count($count_data_by_role) <= 0) {
             redirect( base_url('receive-order'), 'refresh');
             exit();
         }
+        
+        $cus_temp = $this->customer_account == null? null:$this->customer_account[CUS_ID];
+        if($this->level == 'P' && $this->order_model->checkOwner($id,$cus_temp) == null){
+            redirect( base_url('receive-order'), 'refresh');
+            exit();
+        }
+        
         $data['master'] = $this->order_model->getById($id);
         if($data['master'] == NULL){
             redirect( base_url('receive-order'), 'refresh');
@@ -611,7 +655,7 @@ class OrderController extends VV_Controller {
     * Description : view for delivery
     * @author PHAN TIEN ANH
     */
-    public function edit_delivery_order() { 
+    public function edit_delivery_order() {  
         $id = $this->input->get('id'); 
         
         // get order information
@@ -631,8 +675,8 @@ class OrderController extends VV_Controller {
         if($data['master']['is_gaichyu'] == 1 || $data['master']['is_gaichyu'] == "1") {
         $data['is_gaichyu'] = true;
 
-        $is_gaichyu_hotel = $this->checkIsRoleHome(GR_SUBCONTRACTOR_LOCAL);
-        $is_gaichyu_tenal = $this->checkIsRoleHome(GR_SUBCONTRACTOR_TENANT);
+        $is_gaichyu_hotel = $this->checkIsGroupRole(GR_SUBCONTRACTOR_LOCAL);
+        $is_gaichyu_tenal = $this->checkIsGroupRole(GR_SUBCONTRACTOR_TENANT);
         if($is_gaichyu_hotel == true || $is_gaichyu_tenal == true) {
             $data['is_gaichyu_login'] = true;
         }
@@ -648,10 +692,16 @@ class OrderController extends VV_Controller {
         $data['master']['delivery_date_print'] = $this->helper->readDate($data['master'][SL_REVENUE_DATE]);
         
         // get order detail
-        $base_code_price = $this->LOGIN_INFO[U_BASE_CODE];
+        /*$base_code_price = $this->LOGIN_INFO[U_BASE_CODE];
         if($data['is_gaichyu'] == true) {
-            $base_code_price = $data['master']['base_code'];
+            $base_code_price = $data['master']['base_code']; 
+        }*/
+        $base_code_price = $this->LOGIN_INFO[U_BASE_CODE];
+        $base_code_arr = $this->customer_department_model->getBaseByCustomerDepartment($data['master'][SL_CUSTOMER_ID],$data['master'][SL_DEPARTMENT_CODE]);
+        if($base_code_arr != null) {
+            $base_code_price = $base_code_arr[0]['base_code'];
         }
+
         $data['detail']['delivery_data'] = $this->order_detail_model->getByOrderDelivery($id, $base_code_price,$data['master'][SL_CUSTOMER_ID]);
 
         $data['content']='orders/edit_delivery_order';
@@ -692,7 +742,8 @@ class OrderController extends VV_Controller {
                 $this->delivery_model->removeByWhere($whereClause);
 
                 // Query
-                $detailCount = 0;
+                $detailCount = 0; 
+                $quantity_product = 0;
                 foreach ($detail as $key => $value) {
                     if($value['product_id'] != '' && $value['amount'] != '' && (float)$value['amount'] > 0){
                         $detailCount++;
@@ -701,6 +752,10 @@ class OrderController extends VV_Controller {
                         $delivery_detail[DD_PRODUCT_CODE] = $value['product_id'];
                         $delivery_detail[DD_PRODUCT_NAME] = $value['product_name'];
                         $delivery_detail[DD_DELIVERY_AMOUNT] = $value['amount'];
+
+                        if(!empty($value['product_id'])) {
+                            $quantity_product++;
+                        }
 
                         // Validation
                         if((float)$value['special'] != 1) {
@@ -755,6 +810,15 @@ class OrderController extends VV_Controller {
                             return;
                         }
                     }
+                }
+
+                if($quantity_product == 0) {
+                    $this->delivery_model->db->trans_rollback();
+                    echo json_encode(array(
+                        "success" => false,
+                        "message" => $this->lang->line("message_edit_error")
+                    ));
+                    return;
                 }
 
                 // Detail > 0
@@ -1037,7 +1101,7 @@ class OrderController extends VV_Controller {
         if($start_index == NULL || $start_index == ""){ 
             $start_index = 0;
         }
-        if($start_index == 0 || $start_index >= PAGE_SIZE) {
+        if($start_index == 0 || $start_index >= PAGE_SIZE) { 
             $result = $this->order_model->getOrderView($user,$customer,$status,$claim_check,$department,$order_from,$order_to,$delivery_from,$delivery_to,
             $order_no,$is_customer,$start_index,PAGE_SIZE,SL_DATE_CHANGE,"DESC");
         }
@@ -1236,7 +1300,9 @@ class OrderController extends VV_Controller {
         $data['title'] = $this->lang->line('check_list');
         $data['content'] ='orders/checklist';
         $data['list_cus'] = $this->customer_model->getAll();
-        $data['list_user'] = $this->user_model->getAll();
+        //$data['list_user'] = $this->user_model->getAll();
+        $data['list_user'] = $this->user_model->getUserForOrderManager($this->LOGIN_INFO[U_ID]);
+        $data['list_user2'] = $this->user_model->getUserForCustomer($this->LOGIN_INFO[U_ID]);
         $data['cus_type'] = $this->cus_type;
         $data['list_department'] = $this->customer_department_model->getDepartment();
         $this->load->view('templates/master',$data);

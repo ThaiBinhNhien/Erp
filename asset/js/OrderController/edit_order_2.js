@@ -136,7 +136,7 @@ $(document).ready(function(){
 				var option = '<option value=""></option>';
 				if(result != null){
 					for(var i=0;i<result.length;i++){
-						option += '<option value="'+result[i]['department_code']+'">'+result[i]['department']+'</option>';
+						option += '<option value="'+result[i]['department_code']+'" data-base="'+result[i]['base_code']+'">'+result[i]['department']+'</option>';
 					}
 				}
 				$("#customer_department").html(option);
@@ -147,7 +147,7 @@ $(document).ready(function(){
 	$('.productselect1').inputpicker({
         width:'400px',
         url: productSearchUrl,
-        urlParam : {"code":'{{q}}',"customer_id":$("#customer").val(),"base_id":base_id,"department_id":$("#customer_department").val()},
+        urlParam : {"code":'{{q}}',"customer_id":$("#customer").val(),"base_id":$("#customer_department option:selected").data("base"),"department_id":$("#customer_department").val()},
         fields:[{"name":"sale_code", "text":"商品ID"}, 
         		{"name":"name", "text":"商品名"}, 
         		{"name":"standard", "text":"規格"}, 
@@ -159,15 +159,22 @@ $(document).ready(function(){
         autoOpen: true,
         headShow: true,
         pagination: false,   // false: no
-    });
-    $("#customer_department").change(function(){
-		if(is_customer == 1){
+	});
+	
+
+    var previous_base;
+	$("#customer_department").on('focus', function () {
+        // Store the current value on focus and on change
+        previous_base = $("#customer_department option:selected").data("base");
+    }).change(function(){
+		//if(is_customer == 1){
 			var id = $(this).val();
 			var department_previous = $("#customer_department").data("previous");
+			var data_base = $("#customer_department option:selected").data("base");
 			if(id == null || id == ''){
 				return;
 			}
-			if(department_previous != id){
+			if(department_previous != id && previous_base != data_base){
 				if(department_previous != null && department_previous != ''){
 					var msg = "部署を変更すると下記選択した商品が全てリセットされます。よろしいでしょうか？";
 					$('.save-new-order').helloWorld(msg,null,null,{
@@ -181,7 +188,7 @@ $(document).ready(function(){
 
 				}
 			}
-		}
+		//}
 
 	})
 
@@ -406,8 +413,8 @@ $(document).ready(function(){
 		$('#save_order').helloWorld(msg,null,null,{
 					cancel_callback_function: 'cancel_click',
 					success_callback_function: 'ok_click',
-					ok_text: '保存',
-					cancel_text: '修正',
+					ok_text: 'OK',
+					cancel_text: 'キャンセル',
 					not_ajax: true
 				});
 		wait(msg,data);
@@ -425,8 +432,8 @@ $(document).ready(function(){
 				$('#save_order').helloWorld(msg,null,null,{
 					cancel_callback_function: 'cancel_click',
 					success_callback_function: 'ok_click',
-					ok_text: '保存',
-					cancel_text: '修正',
+					ok_text: 'OK',
+					cancel_text: 'キャンセル',
 					not_ajax: true
 				});
 				wait(msg,data);
@@ -460,7 +467,7 @@ $(document).ready(function(){
 		$('input[name="product_item_'+numberRow+'"]').inputpicker({
 	        width:'400px',
 	        url: productSearchUrl,
-	        urlParam : {"code":'{{q}}',"customer_id":$("#customer").val(),"base_id":base_id,"department_id":$("#customer_department").val()},
+	        urlParam : {"code":'{{q}}',"customer_id":$("#customer").val(),"base_id":$("#customer_department option:selected").data("base"),"department_id":$("#customer_department").val()},
 	        fields:[{"name":"sale_code", "text":"商品ID"}, 
 	        		{"name":"name", "text":"商品名"}, 
 	        		{"name":"standard", "text":"規格"}, 

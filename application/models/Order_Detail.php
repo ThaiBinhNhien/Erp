@@ -13,16 +13,18 @@ class Order_Detail extends VV_Model
 		 
 		$this->level = $this->session->userdata('request-level');
 		$this->LOGIN_INFO = $this->session->userdata('login-info');
+		$this->customer_account = $this->session->userdata('customer-info');
 	} 
 
 	public function getByOrderId($order_id){
-		$data = array( OD_ORDER_ID => $order_id );
+		$data = array( OD_ORDER_ID => $order_id );  
 		return $this->getWhere($data);
 	}
 
 	// Get information for order
 	public function getInforOrderById($order_id){
-
+		//$customer = $this->customer_account == null? null:$this->customer_account[CUS_ID];
+		//$is_customer = $this->customer_account == null? 2:1;
 		$query = "
 			SELECT 
 			SL.*,
@@ -41,11 +43,10 @@ class Order_Detail extends VV_Model
 			
 			WHERE CAST(SL.`".SL_ID."` AS  CHAR(512))='".$order_id."'";
 
-			if($this->level == "P"){
-				$query .= "	
-				AND KB.`".CD_USER_ID."` = '".$this->LOGIN_INFO[U_ID]."'
-			";
-			}
+			//if($this->level == "P" && $is_customer == 0){
+				//$query .= " AND SL.`".SL_CUSTOMER_ID."` IN ( SELECT `".CUSTOMER_DEPARTMENT."`.`".CD_CUSTOMER_ID."` FROM `".CUSTOMER_DEPARTMENT."` WHERE `".CD_USER_ID."`='".$this->LOGIN_INFO[U_ID]."')";
+			//}
+
 		$query .= "	
 			GROUP BY SL.`".SL_ID."`
 		";
@@ -80,9 +81,10 @@ class Order_Detail extends VV_Model
 
 	public function getByOrderDetailId($order_detail_id){
 		$data = array( OD_ID => $order_detail_id );
+
 		return $this->getWhere($data);
 	}
-
+ 
 	public function getByOrderIdWithFloor($order_id){
 		$data = array( OD_ORDER_ID => $order_id );
 		$result = $this->getWhere($data);
@@ -130,7 +132,7 @@ class Order_Detail extends VV_Model
 			T_DELI.`".DD_PRODUCT_NAME."` AS product_name_delivery,
 			T_ORDER.`".OD_PRODUCT_NAME."` AS product_name_price 
 			FROM `".ORDER_DETAIL."` T_ORDER 
-			INNER JOIN `".PRODUCT_LEDGER."` T_PRO ON T_ORDER.`".OD_PRODUCT_CODE."` = T_PRO.`".PL_PRODUCT_ID."`
+			LEFT JOIN `".PRODUCT_LEDGER."` T_PRO ON T_ORDER.`".OD_PRODUCT_CODE."` = T_PRO.`".PL_PRODUCT_ID."`
 			LEFT JOIN `".DELIVERY_DETAIL."` T_DELI ON T_ORDER.`".OD_ID."` = T_DELI.`".DD_ORDER_DETAIL_ID."`
 			LEFT JOIN `".PRODUCT_BASE."` T_PR ON T_ORDER.`".OD_PRODUCT_CODE."` = T_PR.`".BB_PRODUCT_CODE."`
 			AND T_PR.`".BB_BASE_CODE."` = ? 

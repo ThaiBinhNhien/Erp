@@ -140,6 +140,7 @@ $route['sale/ajax_edit_sale']['POST'] = 'SaleController/ajax_edit_sale';
 $route['sale/ajax_edit_sale_no_order']['POST'] = 'SaleController/ajax_edit_sale_no_order';
 $route['sale/ajax_del_sale']['POST'] = 'SaleController/ajax_del_sale';
 $route['sale/ajax_get_list_department_by_customer']['POST'] = 'SaleController/ajax_get_list_department_by_customer';
+$route['sale/ajax_get_list_customer_by_department']['POST'] = 'SaleController/ajax_get_list_customer_by_department';
 $route['sale/ajax_get_list_product']['POST'] = 'SaleController/ajax_get_list_product';//lấy danh sách sản phẩm theo mã khách hàng và mã cứ điểm của user
 $route['sale/print-sale'] = 'SaleController/print_sale';
 
@@ -310,6 +311,8 @@ $route['pdf_detergent_condition'] = 'InventoryController/pdf_detergent_condition
 
 /* 仕入品金額明細 */
 $route['pdf_details_buy'] = 'InventoryController/pdf_details_buy';
+$route['pdf_details_buy_buying'] = 'InventoryController/pdf_details_buy';
+//pdf_details_buy_buying
 
 /*  */
 $route['pdf_initial_inventory'] = 'InitialInventoryController/pdf_initial_inventory';

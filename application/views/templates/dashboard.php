@@ -77,12 +77,12 @@
 								echo '<table class="table table-bordered table_detail">';
 									echo '<thead>
 										<tr>
-											<th>'.TGRI_PRODUCT_ID.'</th>
-											<th>'.TGRI_PRODUCT_NAME.'</th>
-											<th>'.PL_STANDARD.'</th>
-											<th>'.PL_COLOR_TONE.'</th>
-											<th>'.TGRI_UNIT_PRICE.'</th>
-											<th>'.TGRI_NUMBER_OF_ORDERS.'</th>
+											<th width="20%">'.TGRI_PRODUCT_ID.'</th>
+											<th width="20%">'.TGRI_PRODUCT_NAME.'</th>
+											<th width="13%">'.PL_STANDARD.'</th>
+											<th width="13%">'.PL_COLOR_TONE.'</th>
+											<th width="19%">'.TGRI_UNIT_PRICE.'</th>
+											<th width="15%">'.TGRI_NUMBER_OF_ORDERS.'</th>
 										</tr>
 									</thead><tbody></tbody>';
 								echo '</table>';
@@ -164,12 +164,12 @@
 									echo '<table class="table table-bordered table_revenue">';
 										echo '<thead>
 											<tr>
-												<th>'.TGRI_PRODUCT_ID.'</th>
-												<th>'.TGRI_PRODUCT_NAME.'</th>
-												<th>'.PL_STANDARD.'</th>
-												<th>'.PL_COLOR_TONE.'</th>
-												<th>'.TGRI_UNIT_PRICE.'</th>
-												<th>'.TGRI_NUMBER_OF_ORDERS.'</th>
+												<th width="20%">'.TGRI_PRODUCT_ID.'</th>
+												<th width="20%">'.TGRI_PRODUCT_NAME.'</th>
+												<th width="15%">'.PL_STANDARD.'</th>
+												<th width="15%">'.PL_COLOR_TONE.'</th>
+												<th width="15%">'.TGRI_UNIT_PRICE.'</th>
+												<th width="15%">'.TGRI_NUMBER_OF_ORDERS.'</th>
 											</tr>
 										</thead><tbody></tbody>';
 									echo '</table>';
@@ -279,12 +279,12 @@
 								echo '<table class="table table-bordered table_shipment">';
 									echo '<thead>
 										<tr>
-											<th>'.TGRI_PRODUCT_ID.'</th>
-											<th>'.TGRI_PRODUCT_NAME.'</th>
-											<th>'.PL_STANDARD.'</th>
-											<th>'.PL_COLOR_TONE.'</th>
-											<th>'.TGRI_UNIT_PRICE.'</th>
-											<th>'.TGRI_NUMBER_OF_ORDERS.'</th>
+											<th width="20%">'.TGRI_PRODUCT_ID.'</th>
+											<th width="20%">'.TGRI_PRODUCT_NAME.'</th>
+											<th width="15%">'.PL_STANDARD.'</th>
+											<th width="15%">'.PL_COLOR_TONE.'</th>
+											<th width="15%">'.TGRI_UNIT_PRICE.'</th>
+											<th width="15%">'.TGRI_NUMBER_OF_ORDERS.'</th>
 										</tr>
 									</thead><tbody></tbody>';
 								echo '</table>';
@@ -365,12 +365,12 @@
 										echo '<table class="table table-bordered table_purchar">';
 											echo '<thead>
 												<tr>
-													<th>'.TGRI_PRODUCT_ID.'</th>
-													<th>'.TGRI_PRODUCT_NAME.'</th>
-													<th>'.PL_STANDARD.'</th>
-													<th>'.PL_COLOR_TONE.'</th>
-													<th>'.TGRI_UNIT_PRICE.'</th>
-													<th>'.TGRI_NUMBER_OF_ORDERS.'</th>
+													<th width="20%">'.TGRI_PRODUCT_ID.'</th>
+													<th width="20%">'.TGRI_PRODUCT_NAME.'</th>
+													<th width="15%">'.PL_STANDARD.'</th>
+													<th width="15%">'.PL_COLOR_TONE.'</th>
+													<th width="15%">'.TGRI_UNIT_PRICE.'</th>
+													<th width="15%">'.TGRI_NUMBER_OF_ORDERS.'</th>
 												</tr>
 											</thead><tbody></tbody>';
 										echo '</table>';
@@ -395,5 +395,6 @@
 	var getDetailOrder_shipment = "<?= site_url('/getDetailODPD')?>";
 	var getPurcharDetail = "<?= site_url('getPurcharDetail')?>";
 	var edit_flagflicker_shipment = "<?= site_url('editFlicker')?>";
+	var message_delete_product = "<?= $this->lang->line("message_delete_product"); ?>";
 </script>
 

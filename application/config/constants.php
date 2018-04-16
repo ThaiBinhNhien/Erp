@@ -339,7 +339,7 @@ define('TSP_ID','id');
 define('TSP_INVENTORY_LOCATION','在庫場所');
 
 //
-define('USER_MASTER','ユーザマスタ');
+define('USER_MASTER','ユーザマスタ'); 
 define('U_ID','ユーザID'); // This is username
 define('U_PASSWORD','パスワード');
 define('U_NAME','氏名');

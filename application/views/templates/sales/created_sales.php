@@ -146,7 +146,7 @@
           <label for="input9" class="col-md-4 control-label">お得意先:</label>
           <div class="col-md-8">
               <select id="customer_id" class="form-control">
-                <option value="none"></option>
+                <option></option>
                 <?php foreach($customer_list as $customer){ ?>
                 <option value="<?php echo($customer->{CUS_ID}) ?>"><?php echo($customer->{CUS_CUSTOMER_NAME}) ?></option>
                 <?php } ?>

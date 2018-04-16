@@ -193,7 +193,7 @@ input.select_product_code {
                     </thead>
                 </table> 
               </div> -->
-              <input class="form-control select_product_code" value="<?php echo $value[OSHD_PRODUCT_CODE];?>" />
+              <input class="form-control select_product_code" value="<?php echo (empty($value['product_code']) && empty($value['product_name']) && empty($value['product_format']) && empty($value['product_color']))?"":$value[OSHD_PRODUCT_CODE];?>" />
             </td>
 
             <td class="shipment_product_name" title="<?php echo $value['product_container'];?>"><?php echo $value['product_name'];?></td>

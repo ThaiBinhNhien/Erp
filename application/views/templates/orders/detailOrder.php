@@ -2,52 +2,23 @@
 .wrapper-contain form{
     margin:0 !important;
 }
-th{
-  //height:22px;
-}
-
- .inputpicker-overflow-hidden{
+.inputpicker-overflow-hidden{
   height:100%;
  }
- td{
-  //height:33px;
- }
- tr,th,td{
- //height:36px;
- //min-height:36px;
- }
- th{
-  //clear:both;
- }
- td{
-   //overflow: hidden;
-    //text-overflow: ellipsis; 
- }
- tr{
-  //height:32px;
- }
- td.headcol,td.sec-col,td.thi-col,td.for-col,td.fif-col,td.six-col,td.sev-col{
-  //height:32px;
-  //border-bottom:none !important;
-  //border-top:none !important;
-  //margin-top:-1px !important;
- }
-td,th{
- // height:32px;
-}
+ 
 th{
   line-height: 32px;
 }
-.scroll-table th{
-    //width:100%;
-}
+
 .full-width{
     width:557px;
     min-width:40px;
 }
-.scroll-table td{
 
+.no-input-table th {
+    padding: 0;
 }
+
 </style>
 <?php
 $sum_checklist = 0;
@@ -65,10 +36,10 @@ $count_checklist = 0;
                         <td><?= $master[SL_ID] ?></td>
                     </tr>
                     <tr><td>起票者:</td>
-                        <td>帝王太郎</td>
+                        <td><?= $master['user_name'] ?></td>
                     </tr>
                     <tr><td>注文日:</td>
-                        <td><?= $master['orderdate_print'] ?></td>
+                        <td><?= $master['orderdate_print'] ?></td> 
                     </tr>
                     <tr><td>得意先名:</td>
                         <td><?= $master['customer_name'] ?></td>
@@ -96,7 +67,7 @@ $count_checklist = 0;
                             $pdf_url = base_url('order/pdf-order?id='.$master[SL_ID]).';'. base_url('order/pdf-floor?id='.$master[SL_ID]);
                         }
                     ?>
-                    <a  href="#" id="pdf_output" data-url="<?= $pdf_url ?>" class="print right top-print" >納品書出力</a>
+                    <a id="pdf_output" data-url="<?= $pdf_url ?>" class="print right top-print" >納品書出力</a>
                 <?php } else { ?>
                     <a class="print print-hide right top-print" >納品書出力</a>
                 <?php } ?>
@@ -171,7 +142,14 @@ $count_checklist = 0;
                                         $total = 0.0;
                                         $addition += $value[OD_ADD];
                                         echo '<tr>';
-                                        echo    '<td class="headcol">'.$value[PL_PRODUCT_CODE_SALE].'</td>';
+                                        
+
+                                        if(empty($value[PL_PRODUCT_CODE_SALE]) && empty($value[PL_STANDARD]) && empty($value[PL_COLOR_TONE]) && empty($value[PL_NUMBER_PACKAGE])) {
+                                            echo '<td class="headcol field_delete">'.$this->lang->line("message_delete_product").'</td>';
+                                        } else {
+                                            echo    '<td class="headcol">'.$value[PL_PRODUCT_CODE_SALE].'</td>';
+                                        }
+
                                         echo    '<td class="sec-col">'.$value[PL_PRODUCT_NAME].'</td>';
                                         echo    '<td class="thi-col">'.$value[PL_STANDARD].'</td>';
                                         echo    '<td class="for-col">'.$value[PL_COLOR_TONE].'</td>';
@@ -242,7 +220,7 @@ $count_checklist = 0;
                             <thead>
                                 <tr>
                                     <th width="8%">商品ID </th> 
-                                    <th>商品名</th>
+                                    <th width="12%">商品名</th>
                                     <th width="8%">規格</th>
                                     <th width="8%">カラー</th>
                                     <th width="8%">結束単位</th>
@@ -274,7 +252,12 @@ $count_checklist = 0;
                                 $total = 0;
                                 foreach ($detail['delivery_data'] as $key => $value) {
                                     echo '<tr>';
-                                    echo    '<td>'.$value[PL_PRODUCT_CODE_SALE].'</td>';
+                                    //echo    '<td>'.$value[PL_PRODUCT_CODE_SALE].'</td>';
+                                    if(empty($value[PL_PRODUCT_CODE_SALE]) && empty($value[PL_STANDARD]) && empty($value[PL_COLOR_TONE]) && empty($value[PL_NUMBER_PACKAGE])) {
+                                        echo '<td class=" field_delete">'.$this->lang->line("message_delete_product").'</td>';
+                                    } else {
+                                        echo    '<td>'.$value[PL_PRODUCT_CODE_SALE].'</td>';
+                                    } 
                                     if($value['product_name_delivery'] != null && $value['product_name_delivery'] != "") {
                                         echo    '<td>'.$value['product_name_delivery'].'</td>';
                                       } else if($value['product_name_price'] != null && $value['product_name_price'] != "") {
@@ -356,33 +339,24 @@ $count_checklist = 0;
                                     <td></td>
                                     <td></td>
                                     <td></td>
-
-                                    <?php if($is_gaichyu == true) {
-                            if($is_gaichyu_login == true) {
-                              ?>
-                              <td></td>
-                              <?php
-                            } else {
-                            ?>
-                            <td></td>
-                            
-                            <?php } } else { ?>
-                              <td></td>
-                            <?php } ?>
-
+                                    <td></td>
                                     <td><?= number_format($total,2) ?></td>
                                     <td></td>
                                     <td></td>
-
-                                    <?php if($is_gaichyu_login == true) { ?>
-                            <td><?= ($sum_total_gaichyu > 0) ? number_format($sum_total_gaichyu,2) : "" ?></td>
-                          <?php } else { ?>
-                            <td></td>
-                            <td><?= ($sum_total > 0) ? number_format($sum_total,2) : "" ?></td>
-                            <?php } ?>
+                                    
+                                    <?php if($is_gaichyu == true) { ?>
+                                        <?php if($is_gaichyu_login == true) { ?>
+                                            <td><?= ($sum_total_gaichyu > 0) ? number_format($sum_total_gaichyu,2) : "" ?></td>
+                                        <?php } else { ?>
+                                            <td></td>
+                                            <td><?= ($sum_total > 0) ? number_format($sum_total,2) : "" ?></td>
+                                        <?php } ?>
+                                    <?php } else { ?>
+                                        <td><?= ($sum_total > 0) ? number_format($sum_total,2) : "" ?></td>
+                                    <?php } ?>
 
 									<td></td>
-                                </tr> 
+                                </tr>
                             </tbody>
                         </table>
                     </div>

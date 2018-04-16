@@ -319,42 +319,54 @@ class PurchaseController extends VV_Controller {
 
 	public function get_number_import()
 	{
+		ini_set('max_execution_time', 600);
 		$check_id_has_process = array();//id bảng xuất nhập kho đã thao tác
 		$query = "select * from 入出庫情報 "
-				." where (発注数 > 0 or 入庫数 > 0 or 出庫数 > 0)"
-				." order by 商品ID ASC, 処理日 ASC; ";
-		$list_info_buying = $this->db->query($query)->result_array();
-		//echo count($list_info_buying);
+				." where (発注数 > 0 or 入庫数 > 0)"
+				." and (発注伝票ID > 0 or 入庫伝票ID > 0)"
+				." order by 商品ID ASC, 処理日 ASC "
+				." LIMIT 1000 ;";
+		$list_info_buying = $this->db->query($query)->result();
+		echo count($list_info_buying);
 		$i = 0;
 		$group_by_product = array();
 		foreach ($list_info_buying as $id => $row) {
 			if($id == 0){}
-			else if($list_info_buying[$id]['商品ID'] != $list_info_buying[$id-1]['商品ID']) $i++;
+			else if($list_info_buying[$id]->商品ID != $list_info_buying[$id-1]->商品ID) $i++;
 			$group_by_product[$i][] = $row;
 		}
-		//print_r($group_by_product[3]);
-		foreach ($group_by_product as $key => $group_by_date) {//danh sách sort theo id sản phẩm tăng dần
-			foreach ($group_by_date as $key2 => $value2) {//danh sách sort theo ngày tăng dần
+		$arr_update_id = array();
+		foreach ($group_by_product as $group_by_date) {//danh sách sort theo id sản phẩm tăng dần
+			foreach ($group_by_date as $value2) {//danh sách sort theo ngày tăng dần
 				$id_import_tb = null;
 				$total_import = 0;
-				if($value2["発注伝票ID"] > 0 && !in_array($value2['入出庫ID'],$check_id_has_process)){
-					$check_id_has_process[] = $value2["発注伝票ID"];
-					foreach ($group_by_date as $key3 => &$value3) {
-						if($value3["入庫伝票ID"] > 0 && $total_import+$value3["入庫数"] <= $value2["発注数"] && !in_array($value3["発注伝票ID"], $check_id_has_process)){
-							$check_id_has_process[] = $value3["発注伝票ID"];
-							if(isset($id_import_tb)) $id_import_tb = $value3["入庫伝票ID"];
-							$value3["入庫伝票ID"] = $id_import_tb;
-							$total_import += $value3["入庫数"];
+				if($value2->発注伝票ID > 0 && !in_array($value2->入出庫ID,$check_id_has_process)){
+					$check_id_has_process[] = $value2->入出庫ID;
+					foreach ($group_by_date as $k => $value3) {
+						if($value3->入庫伝票ID > 0 && $total_import+$value3->入庫数 <= $value2->発注数 && !in_array($value3->入出庫ID, $check_id_has_process)){
+							$check_id_has_process[] = $value3->入出庫ID;
+							if($id_import_tb == null) $id_import_tb = $value3->入庫伝票ID;
+							$arr_update_id[] = array(
+								"tb_id" => $value3->入出庫ID,
+								"product_id" => $value3->商品ID,
+								"old_import_id" => $value3->入庫伝票ID,
+								"new_import_id" => $value2->発注伝票ID,
+								"order_id" => $value2->発注伝票ID
+							);
+							$value3->入庫伝票ID = $id_import_tb;
+							$total_import += $value3->入庫数;
+						}
+						if($value3->入庫伝票ID > 0 && !in_array($value3->入出庫ID, $check_id_has_process)){
+
 						}
 					}
 				}
 			}
 		}
 
-		print_r($group_by_product[1]);
-		/*foreach ($group_by_product[1] as $key => $value) {
-			echo "id order:".$value["発注伝票ID"].", id nhap kho:".$value["入庫伝票ID"]."<br>";
-		}*/
+		foreach ($arr_update_id as $key => $value) {
+			print_r($value);echo "<br>";
+		}
 	}
 
 	const no_template = 'no-template';
@@ -670,6 +682,7 @@ class PurchaseController extends VV_Controller {
 
 		$list_product_order['order_id'] = $_POST['order_id'];
 		$list_product_order['base_code'] = $_POST['stock_id'];
+		$list_product_order['order_date'] = $_POST['date_create'];
 		$list_product_order['supplier_id'] = $_POST['supplier_id'];
 		$list_product_order['sales_des_id'] = $_POST['sales_des_id'];
 		$list_product_order['register_user'] = $_SESSION['login-info'][U_ID];

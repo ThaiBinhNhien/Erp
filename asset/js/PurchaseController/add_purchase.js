@@ -194,7 +194,7 @@ function convert_product_list_select() {
     td.eq(1).text('');
     td.eq(2).text('');
     td.eq(3).text('');
-    td.eq(4).find('.amount').val(0);
+    td.eq(4).find('.amount').val('');
     td.eq(5).text('');
     td.eq(6).text('');
     td.eq(7).text('');
@@ -230,6 +230,7 @@ $('tbody').on('keyup','.amount',function(e){
   } else {
     $(this).closest('td').css('position','relative');
     $(this).closest('td').append('<div class="popup"><span class="popuptext" id="myPopup">必須です。ご入力ください。</span></div>');
+    setTimeout(function(){ $('.popup').fadeOut().remove(); }, 5000);
     $('#create-purchase-order').addClass('error');
   }
 
@@ -293,11 +294,11 @@ $("form[name='add_purchase_order']").validate();
         placement:'top'
     });
     //__Discount 
-    $('.discount').rules('add', { required: true ,number: true,min: 0,max: 100});
+    /*$('.discount').rules('add', { required: true ,number: true,min: 0,max: 100});
         $('.discount').tooltip({
             trigger: 'manual',
             placement:'top'
-    });
+    });*/
     //__Show loading display here
     var form = $("form[name='add_purchase_order']");
     //__Validation
@@ -359,12 +360,13 @@ $('.add-purchase').on('click','#create-purchase-order',function(){
         $(this).closest('td').find('.popup').remove();
         $(this).closest('td').css('position','relative');
         $(this).closest('td').append('<div class="popup"><span class="popuptext" id="myPopup">必須です。ご入力ください。</span></div>');
+        setTimeout(function(){ $('.popup').fadeOut().remove(); }, 5000);
         $('#create-purchase-order').addClass('error');
               return false;//Exit();
-            } else {
+            } /*else {
               $(this).closest('td').find('.popup').remove();
               $('#create-purchase-order').removeClass('error');
-            }           
+            }           */
     });//__End product
     //__Check validation of amount
     $( ".amount").each(function() {
@@ -372,6 +374,7 @@ $('.add-purchase').on('click','#create-purchase-order',function(){
       if(valid == '' || valid == 0){
           $(this).closest('td').css('position','relative');
           $(this).closest('td').append('<div class="popup"><span class="popuptext" id="myPopup">必須です。ご入力ください。</span></div>');
+          setTimeout(function(){ $('.popup').fadeOut().remove(); }, 5000);
           $('#create-purchase-order').addClass('error');
           return false;//Exit();
         }
@@ -471,6 +474,7 @@ $('#save-provisional').click(function(){
         } else {
           $(this).closest('td').css('position','relative');
           $(this).closest('td').append('<div class="popup"><span class="popuptext" id="myPopup">必須です。ご入力ください。</span></div>');
+          setTimeout(function(){ $('.popup').fadeOut().remove(); }, 5000);
           $('#create-purchase-order').addClass('error');
           return false;//Exit();
         }
@@ -636,7 +640,7 @@ $('#sales_des_id').change(function(){
 })
 
 //__Don't allow typing text, only number
-$('#add-purchase-table').on('keypress','.amount,.discount,.product_id',function(event){
+$('#add-purchase-table').on('keypress','.amount,.product_id',function(event){
     var key = window.event ? event.keyCode : event.which;
     if (event.keyCode === 8) {
         return true;
@@ -646,9 +650,29 @@ $('#add-purchase-table').on('keypress','.amount,.discount,.product_id',function(
       return true;
     }
 });
-
+$('#add-purchase-table').on('keypress','.discount',function(event){
+    var key = window.event ? event.keyCode : event.which;
+    var charStr = String.fromCharCode(key);
+    var currentValue = String.fromCharCode(event.which);
+    var finalValue = $(this).val() + currentValue;
+    if (event.keyCode === 8 || event.keyCode === 46) {
+        return true;   
+    } else if ( key < 48 || key > 57 ) {
+        return false;
+    } else {
+      if(finalValue > 100)
+        {
+         event.preventDefault();
+        }
+    }
+});
 function find_buy_code_by_id(real_id) {
   for(var i in filter_product){
     if(filter_product[i].id == real_id) return filter_product[i].buy_code;
   }
 }
+$('#add-purchase-table').on('keydown','.amount,.comment_product', function(e) {
+    if (e.which == 13) {
+    $('#insert-row-purchase').trigger('click');
+    }
+});

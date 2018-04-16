@@ -1,3 +1,21 @@
+<style>
+button{
+  height:31px;
+}
+.btn-group{
+  width: calc(100% - 25px) !important;
+}
+.filter-option{
+  margin-top:-1%;
+}
+
+.no-sum-col, .sev-col{
+  line-height: 2.5;
+}
+.productselect1 {
+  text-align: center;
+}
+</style>
 <div class="wrapper-contain order edit-order-2">
 <div class="row" >
 <div class="col-md-8"> 
@@ -26,7 +44,7 @@
         <div class="form-group">
           <label name="lb-issuer" class="col-md-4 control-label">起票者:</label>
           <div class="col-md-8">
-			  <input value="帝王太郎" disabled name="issuer" class="hide-input"/>
+			  <input value="<?= $master['user_name'] ?>" disabled name="issuer" class="hide-input"/>
 			
           </div>
         </div>
@@ -67,7 +85,7 @@
             <select class="form-control" name="customer_department" data-previous="<?= $master[SL_DEPARTMENT_CODE] ?>" id="customer_department">
               <option value=""></option>
              <?php foreach ($department as $key => $value) {
-              echo '<option value="'.$value[CD_DEPARTMENT_CODE].'" '.($value[CD_DEPARTMENT_CODE]==$master[SL_DEPARTMENT_CODE]?'selected':'').' >'.$value[DL_DEPARTMENT_NAME].'</option>';
+              echo '<option value="'.$value[CD_DEPARTMENT_CODE].'" data-base="'.$value["base_code"].'" '.($value[CD_DEPARTMENT_CODE]==$master[SL_DEPARTMENT_CODE]?'selected':'').' >'.$value[DL_DEPARTMENT_NAME].'</option>';
             }
             ?>
             </select>
@@ -166,7 +184,7 @@
 			<a href="" class="print left" id="insert">行挿入 </a>
 			<a href="" class="print left" id="remove">行削除 </a> 
 			<a href="#dialog-form" id="save_order" class="print save_order right">保存 </a> 
-			<a href="<?php echo site_url('order/detail-order-2');?>" class="print right " >戻る </a>
+			<a href="<?php echo site_url('order/detail-order-2?id=');?><?= $master[SL_ID] ?>" class="print right " >戻る </a>
 		</div>
 	</div>
 </div>

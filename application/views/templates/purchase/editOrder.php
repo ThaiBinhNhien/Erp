@@ -369,7 +369,7 @@ table input{
 
 
             </td>
-            <td data-name class='left-text' ><?php echo $product->{PL_PRODUCT_NAME_BUY}; ?></td>
+            <td data-name class='left-text product_name' ><?php echo $product->{PL_PRODUCT_NAME_BUY}; ?></td>
             <td data-color><?php echo $product->{PL_COLOR_TONE}; ?></td>
             <td data-standard><?php echo $product->{PL_STANDARD}; ?></td>
             <td class=''><input class="amount center-text" value="<?php echo $product->{TGRI_NUMBER_OF_ORDERS}; ?>"></td>
@@ -386,7 +386,7 @@ table input{
             <td></td>
         </tr>
          <tr class="sum-col">
-			<td colspan="7" class="right-text"> 値引</td>
+			<td colspan="7" class="right-text"> 値引(%)</td>
             <td class="center-text"><input value="<?php echo $discount ?>" class="center-text  right-text discount" name="discount"></td>
             <td></td>
         </tr>

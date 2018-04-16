@@ -45,7 +45,10 @@ table tbody a {
                         <select class="form-control" id="user">
                         <option value=''></option>
                         <?php foreach ($list_user as $key => $value) {
-                            echo '<option value="'.$value[U_ID].'">'.$value[U_NAME].'</option>';
+                            echo '<option value="'.$value[U_ID].'">'.(!empty($value[U_NAME]) ? $value[U_NAME] : $value[U_ID]).'</option>';
+                        } ?>
+                        <?php foreach ($list_user2 as $key => $value) {
+                            echo '<option value="'.$value[U_ID].'">'.(!empty($value[U_NAME]) ? $value[U_NAME] : $value[U_ID]).'</option>';
                         } ?>
                         </select>
                     </div>
@@ -160,4 +163,5 @@ var message_success_checklist_diff_search = "<?= $this->lang->line('message_succ
 var message_error_not_data_checked = "<?= $this->lang->line('message_error_not_data_checked')?>";
 var message_title_confirm_checklist = "<?= $this->lang->line('message_title_confirm_checklist')?>";
 var url_export_checklist = "<?= base_url("receive-order/checklist/pdf_checklist") ?>";
+var message_delete_product = "<?= $this->lang->line('message_delete_product')?>";
 </script>

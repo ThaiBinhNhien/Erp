@@ -138,8 +138,8 @@ $(document).on("click","#save_checklist", function(){
             url:checkListUrl,
             data:{data:data,date_update:date_update,id_order:id_order},
             error_message:errorAjax,
-            ok_text: '保存',
-            cancel_text: '修正'
+            ok_text: 'OK',
+            cancel_text: 'キャンセル'
         });
     }
     else{
@@ -226,9 +226,14 @@ function FuncCheckList(pdf_export, viewError){
                                 html += '<td>'+formatDate(value_delivery['date_delivery'])+'</td>';
                                 html += '<td>'+value_delivery['customer_name']+'</td>';
                                 html += '<td>'+value_delivery['department_name']+'</td>';
-                                html += '<td>'+value_delivery['product_code_sale']+'</td>';
+                                //html += '<td>'+value_delivery['product_code_sale']+'</td>';
+                                if(value_delivery['product_code_sale'] == "" || value_delivery['product_code_sale'] == null) {
+                                    html += '<td class="field_delete">'+message_delete_product+'</td>';
+                                } else {
+                                    html += '<td>'+value_delivery['product_code_sale']+'</td>';
+                                }
+                                
                                 html += '<td>'+value_delivery['product_name_sale']+'</td>';
-
                                 if(value_delivery['product_special'] == 1 || value_delivery['product_special'] == "1") {
                                     html += '<td></td>';
                                     html += '<td></td>';

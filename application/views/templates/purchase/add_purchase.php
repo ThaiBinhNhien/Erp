@@ -224,7 +224,7 @@ table input{
 			<td></td>
         </tr>
         <tr class="sum-col no-pad">
-            <td colspan="7" style="text-align:right;font-weight:bold;" > 値引</td>
+            <td colspan="7" style="text-align:right;font-weight:bold;" > 値引(%)</td>
            
 			<td><input class="vat discount" value="0" name="discount"></td>
 			<td></td>

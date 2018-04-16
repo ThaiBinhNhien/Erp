@@ -13,10 +13,11 @@ class Customer_Department extends VV_Model
 
 	function getByCustomer($customer_id,$translate=false){
 		$this->db->distinct();
-		$this->db->select(CUSTOMER_DEPARTMENT.".*,".DEPARTMENT_LEDGER.".".DL_DEPARTMENT_NAME.",".DEPARTMENT_LEDGER.".".DL_DEPARTMENT_NAME." AS department,".CUSTOMER_DEPARTMENT.".".CD_DEPARTMENT_CODE." AS department_code,".CUSTOMER_DEPARTMENT.".".CD_DEPARTMENT_CODE." AS department_id,".CUSTOMER_DEPARTMENT.".".CUS_DE_ID." AS id,".CD_CUSTOMER_ID." AS customer_id");
+		$this->db->select(CUSTOMER_DEPARTMENT.".*,".DEPARTMENT_LEDGER.".".DL_DEPARTMENT_NAME.",".DEPARTMENT_LEDGER.".".DL_DEPARTMENT_NAME." AS department,".CUSTOMER_DEPARTMENT.".".CD_DEPARTMENT_CODE." AS department_code,".CUSTOMER_DEPARTMENT.".".CD_DEPARTMENT_CODE." AS department_id,".CUSTOMER_DEPARTMENT.".".CUS_DE_ID." AS id,".CD_CUSTOMER_ID." AS customer_id,".USER_MASTER.".".U_BASE_CODE." AS base_code");
 		
 		$this->db->join(DEPARTMENT_LEDGER,DEPARTMENT_LEDGER.".".DL_DEPARTMENT_CODE."=".CUSTOMER_DEPARTMENT.".".CD_DEPARTMENT_CODE);
-		
+		$this->db->join(USER_MASTER,USER_MASTER.".`".U_ID."`=".CUSTOMER_DEPARTMENT.".".CD_USER_ID);
+
 		if($customer_id != null && $customer_id != "") {
 			$this->db->where( 
 							array(
@@ -26,13 +27,22 @@ class Customer_Department extends VV_Model
 		} else {
 			//$this->db->limit(200);
 		}
+		if($this->level == "P"){
+			if($this->customer_account == NULL){
+				$this->db->where(CUSTOMER_DEPARTMENT.".".CD_USER_ID,$this->LOGIN_INFO[U_ID]);
+			}else{
+				$this->db->where(CUSTOMER_DEPARTMENT.".".CD_CUSTOMER_ID , $this->customer_account[CUS_ID]);
+			}
+			
+		}
 		return $this->db->get($this->table_name)->result_array();
 	}
 
 	function getDepartment($customer_id = NULL){
-		$this->db->select(DEPARTMENT_LEDGER.".".DL_DEPARTMENT_NAME.",".DEPARTMENT_LEDGER.".".DL_DEPARTMENT_CODE.",".DEPARTMENT_LEDGER.".".DL_DEPARTMENT_NAME." AS department,".CUSTOMER_DEPARTMENT.".".CD_DEPARTMENT_CODE." AS department_code,".CUSTOMER_DEPARTMENT.".".CD_DEPARTMENT_CODE." AS department_id");
+		$this->db->select(DEPARTMENT_LEDGER.".".DL_DEPARTMENT_NAME.",".DEPARTMENT_LEDGER.".".DL_DEPARTMENT_CODE.",".DEPARTMENT_LEDGER.".".DL_DEPARTMENT_NAME." AS department,".CUSTOMER_DEPARTMENT.".".CD_DEPARTMENT_CODE." AS department_code,".CUSTOMER_DEPARTMENT.".".CD_DEPARTMENT_CODE." AS department_id,".USER_MASTER.".".U_BASE_CODE." AS base_code");
 		$this->db->distinct();
 		$this->db->join(DEPARTMENT_LEDGER,DEPARTMENT_LEDGER.".".DL_DEPARTMENT_CODE."=".CUSTOMER_DEPARTMENT.".".CD_DEPARTMENT_CODE);
+		$this->db->join(USER_MASTER,USER_MASTER.".`".U_ID."`=".CUSTOMER_DEPARTMENT.".".CD_USER_ID);
 		if($customer_id != null && $customer_id != "") {
 			$this->db->where( 
 							array(
@@ -48,6 +58,20 @@ class Customer_Department extends VV_Model
 			}
 			
 		}
+		return $this->db->get($this->table_name)->result_array();
+	}
+
+	function getBaseByCustomerDepartment($customer_id = NULL,$department_id = NULL){
+		$this->db->select(USER_MASTER.".".U_BASE_CODE." AS base_code");
+		$this->db->distinct();
+		$this->db->join(USER_MASTER,USER_MASTER.".`".U_ID."`=".CUSTOMER_DEPARTMENT.".".CD_USER_ID);
+		$this->db->where( 
+			array(
+				CUSTOMER_DEPARTMENT.".".CD_CUSTOMER_ID => $customer_id,
+				CUSTOMER_DEPARTMENT.".".CD_DEPARTMENT_CODE => $department_id
+			)
+		);
+
 		return $this->db->get($this->table_name)->result_array();
 	}
 

@@ -43,7 +43,10 @@ table.dataTable{table-layout: auto !important}
                         <select class="form-control" id="user">
                         <option value=''></option>
                         <?php foreach ($list_user as $key => $value) {
-                            echo '<option value="'.$value[U_ID].'">'.$value[U_NAME].'</option>';
+                            echo '<option value="'.$value[U_ID].'">'.(!empty($value[U_NAME]) ? $value[U_NAME] : $value[U_ID]).'</option>';
+                        } ?>
+                        <?php foreach ($list_user2 as $key => $value) {
+                            echo '<option value="'.$value[U_ID].'">'.(!empty($value[U_NAME]) ? $value[U_NAME] : $value[U_ID]).'</option>';
                         } ?>
                         </select>
                     </div>

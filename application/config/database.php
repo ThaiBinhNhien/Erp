@@ -75,11 +75,10 @@ $query_builder = TRUE;
 
 $db['default'] = array(
 	'dsn'	=> '',
-	'hostname' => '127.0.0.1',
+	'hostname' => '/cloudsql/erptolinen:us-central1:erp-tolinen',
 	'username' => 'root',
 	'password' => 'erptolinen2018',
 	'database' => 'erp_tolinen',
-	'socket'   => '/cloudsql/erptolinen2018:us-central1:mysql-erptolinen'
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,

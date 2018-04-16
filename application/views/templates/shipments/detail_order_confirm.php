@@ -91,7 +91,15 @@ $varNum = "num";
         <tr>  
             <td><input type="hidden" class="shipment_product_weight" value="<?php echo $value['product_weight']; ?>" /><input type="hidden" class="product_customer" value="<?php echo $value[OSHD_CUSTOMER_ID];?>" /><input type="hidden" class="product_customer_name" value="<?php echo $value['customer_name'];?>" /><?php echo $value['customer_name'];?></td>
             <td><input type="hidden" class="product_derpartment" value="<?php echo $value[OSHD_DEPARTMENT_ID];?>" /><input type="hidden" class="product_derpartment_name" value="<?php echo $value['department_name'];?>" /><?php echo $value['department_name'];?></td>
-            <td><input type="hidden" class="product_code" value="<?php echo $value[OSHD_PRODUCT_CODE];?>" /><?php echo $value[OSHD_PRODUCT_CODE];?></td>
+            <?php
+            if(empty($value['product_code']) && empty($value['product_name']) && empty($value['product_format']) && empty($value['product_color'])) {
+                echo '<td class="field_delete"><input type="hidden" class="product_code" value="" />';
+                echo $this->lang->line("message_delete_product");
+            } else {
+                echo '<td><input type="hidden" class="product_code" value="'.$value[OSHD_PRODUCT_CODE].'" />';
+                echo $value[OSHD_PRODUCT_CODE];
+            } ?>
+            </td>
             <td title="<?php echo $value['product_container'];?>"><?php echo $value['product_name'];?></td>
             <td><?php echo $value['product_format'];?></td>
             <td><?php echo $value['product_color'];?></td>

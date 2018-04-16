@@ -148,7 +148,7 @@
             <!--<td></td>-->
         </tr>
          <tr class="sum-col">
-            <td colspan="7"> 値引</td>
+            <td colspan="7"> 値引(%)</td>
             <td class="right-text"><?php echo $discount; ?></td>
             <!--<td></td>-->
         </tr>

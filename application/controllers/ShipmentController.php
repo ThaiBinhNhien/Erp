@@ -1071,6 +1071,7 @@ class ShipmentController extends VV_Controller {
 
                 // Query
                 $quantity_delivery_all = 0;
+                $quantity_product = 0;
                 foreach ($data_detail as $key => $value) {
                     $shipment_detail[OSHD_ORDER_ID] = $id_order; // id order
                     $shipment_detail[OSHD_CUSTOMER_ID] = $value['customer']; // customer
@@ -1082,6 +1083,10 @@ class ShipmentController extends VV_Controller {
                     $shipment_detail[OSHD_CONTAINER1] = $value['container1'];
                     $shipment_detail[OSHD_CONTAINER2] = $value['container2'];
                     $shipment_detail[OSHD_COMMENT] = $value['comment'];
+
+                    if(!empty($value['product_id'])) {
+                        $quantity_product++;
+                    }
 
                     if($value['quantity'] != '') {
                         $quantity_change = 0;
@@ -1120,6 +1125,16 @@ class ShipmentController extends VV_Controller {
                     echo json_encode(array(
                         "success" => false,
                         "message" => $this->lang->line("message_check_isNull_quantity_error")
+                    ));
+                    return;
+                }
+
+                if($quantity_product == 0) {
+                    $this->shipment_model->db->trans_rollback();
+                    $this->shipment_detail_model->db->trans_rollback();
+                    echo json_encode(array(
+                        "success" => false,
+                        "message" => $this->lang->line("message_edit_error")
                     ));
                     return;
                 }

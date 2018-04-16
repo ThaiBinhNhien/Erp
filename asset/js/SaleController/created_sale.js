@@ -1,3 +1,5 @@
+var select_flag = null;
+
 var check=false;
 var checkfocus = false;
  $('.datatable').dataTable( {
@@ -265,21 +267,41 @@ $('#invoice_no,#order_id').keyup(function(){
         }
     }).attr('readonly','readonly');
 
-$('#customer_id').change(function(){
-    if(this.value != 'none'){
+$("#customer_id").on('change',function(){
+    if(select_flag != "department"){
+        select_flag = "customer";
+        if(this.value == 0) select_flag = null;
         $.post(base_url+"sale/ajax_get_list_department_by_customer",
         {
             customer_id : this.value
         },function(data,err){
             var option = "<option></option>";
+            console.log(data);
             var list_json = JSON.parse(data);
             for(var i in list_json){
                 option += "<option value='"+list_json[i].department_id+"'>"+list_json[i].department_name+"</option>";
             }
             $("#department_id").html(option);
         });
-    }else{
-        $("#department_id").html('<option></option>');
+    }
+});
+
+$("#department_id").on('change',function(){
+    if(select_flag != "customer"){
+        select_flag = "department";
+        if(this.value == 0) select_flag = null;
+        $.post(base_url+"sale/ajax_get_list_customer_by_department",
+        {
+            department_id : this.value
+        },function(data,err){
+            var option = "<option></option>";
+            var list_json = JSON.parse(data);
+            for(var i in list_json){
+                option += "<option value='"+list_json[i].customer_id+"'>"+list_json[i].customer_name+"</option>";
+            }
+            $("#customer_id").html(option);
+            console.log(data);
+        });
     }
 });
 

@@ -56,7 +56,7 @@ class Delivery extends VV_Model
 			
 			FROM `".DELIVERY_DETAIL."` D
 			INNER JOIN `".SALES_LEDGER."` S ON D.`".DD_ORDER_ID."` = S.`".SL_ID."` 
-			INNER JOIN `".PRODUCT_LEDGER."` P ON D.`".DD_PRODUCT_CODE."` = P.`".PL_PRODUCT_ID."`
+			LEFT JOIN `".PRODUCT_LEDGER."` P ON D.`".DD_PRODUCT_CODE."` = P.`".PL_PRODUCT_ID."`
 			INNER JOIN `".ORDER_DETAIL."` O ON D.`".DD_ORDER_DETAIL_ID."` = O.".OD_ID."
 			INNER JOIN `".CUSTOMER."` CUS ON S.`".SL_CUSTOMER_ID."` = CUS.`".CUS_ID."`
 			INNER JOIN `".DEPARTMENT_LEDGER."` DEP ON S.`".SL_DEPARTMENT_CODE."` = DEP.`".DL_DEPARTMENT_CODE."`  
@@ -107,7 +107,9 @@ class Delivery extends VV_Model
 
 		if($this->level == "P"){
 			$whereClause .= ($whereClause == "WHERE "?"":"AND ");
-			$whereClause .= "KB.`".CD_USER_ID."` = '".$this->LOGIN_INFO[U_ID]."' ";
+			$whereClause .= "S.`".SL_DEPARTMENT_CODE."` IN ( SELECT `".CUSTOMER_DEPARTMENT."`.`".CD_DEPARTMENT_CODE."` FROM `".CUSTOMER_DEPARTMENT."` WHERE `".CD_CUSTOMER_ID."`=S.`".SL_CUSTOMER_ID."` AND `".CD_USER_ID."`='".$this->LOGIN_INFO[U_ID]."')";
+			//$whereClause .= "S.`".SL_CUSTOMER_ID."` IN ( SELECT `".CUSTOMER_DEPARTMENT."`.`".CD_CUSTOMER_ID."` FROM `".CUSTOMER_DEPARTMENT."` WHERE `".CD_USER_ID."`='".$this->LOGIN_INFO[U_ID]."')";
+			//$whereClause .= "KB.`".CD_USER_ID."` = '".$this->LOGIN_INFO[U_ID]."' ";
 		}
 
 		$whereClause = $whereClause=="WHERE "?"":$whereClause;

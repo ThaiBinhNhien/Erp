@@ -375,13 +375,27 @@ class SaleController extends VV_Controller {
 		$this->load->model('Department');
 		$customer_id = $_POST['customer_id'];
 		$list_department = array();
-		$all_department = $this->Department->getDepartmentByCustomer($customer_id);
+		$all_department = $this->Department->getDepartment($customer_id);
 		for ($i = 0; $i < count($all_department); $i++) {
 			$list_department[$i] = new stdClass;
 			$list_department[$i]->department_id = $all_department[$i][DL_DEPARTMENT_CODE];
 			$list_department[$i]->department_name = $all_department[$i][DL_DEPARTMENT_NAME];
 		}
 		echo json_encode($list_department);
+	}
+
+	public function ajax_get_list_customer_by_department()
+	{
+		$this->load->model('Department');
+		$department_id = $_POST['department_id'];
+		$list_customer = array();
+		$all_customer = $this->Department->getCustomer($department_id);
+		for ($i = 0; $i < count($all_customer); $i++) {
+			$list_customer[$i] = new stdClass;
+			$list_customer[$i]->customer_id = $all_customer[$i][CUS_ID];
+			$list_customer[$i]->customer_name = $all_customer[$i][CUS_CUSTOMER_NAME];
+		}
+		echo json_encode($list_customer);
 	}
 
 	//ajax lấy danh sách sản phẩm theo mã khách hàng và mã cứ điểm

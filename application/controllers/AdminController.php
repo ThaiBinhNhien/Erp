@@ -16,6 +16,8 @@ class AdminController extends VV_Controller {
 		$this->load->model('Buying');
 		$this->load->model('Issuing');
 		$this->load->model('Dashboard_model','Dash_Board');
+
+		$this->customer_account = $this->session->userdata('customer-info'); 
     }
 	
 	public function index() 
@@ -50,7 +52,7 @@ class AdminController extends VV_Controller {
 		{
 			$array_order_list = [];
 		}
-		else
+		else 
 		{
 			$user_name = $this->session->userdata('login-info');
 			$tmp_level = $this->session->userdata('request-level');
@@ -62,7 +64,9 @@ class AdminController extends VV_Controller {
 			else if($tmp_level == 'P')
 			{ 
 				//get personal
-				$array_order_list = $this->Dash_Board->get_order_personal_list_by_date($user_name[U_ID]);
+				$customer = $this->customer_account == null? null:$this->customer_account[CUS_ID];
+        		$is_customer = $this->customer_account == null? 2:1;
+				$array_order_list = $this->Dash_Board->get_order_personal_list_by_date($user_name[U_ID],$customer,$is_customer);
 			}	
 		}
 		return $array_order_list;

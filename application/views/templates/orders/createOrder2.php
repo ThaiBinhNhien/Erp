@@ -1,3 +1,21 @@
+<style>
+button{
+  height:31px;
+}
+.btn-group{
+  width: calc(100% - 25px) !important;
+}
+.filter-option{
+  margin-top:-1%;
+}
+
+.no-sum-col, .sev-col{
+  line-height: 2.5;
+}
+.productselect1 {
+  text-align: center;
+}
+</style>
 <div class="wrapper-contain order">
  <div class="row">
 <div class="col-md-8"> 
@@ -88,7 +106,7 @@
         </div>
       </div>
 		<div class="col-sm-2 col-md-1 col-lg-1">
-        <a href="#" class="print" id="btn_prouduct_set" style="margin:0;">表示</a>	
+        <a class="print" id="btn_prouduct_set" style="margin:0;">表示</a>	
       </div>
     </div>
 	<div class="row">
@@ -151,10 +169,10 @@
 	<textarea class="form-control" id="note" rows="5"></textarea><br />
 </div>
 <div class="row margin-bottom-table">
-	<a href="#" class="print left" id="insert">行挿入 </a>
-	<a href="#" class="print left" id="remove">行削除 </a>
-	<a href="#dialog-form" class="print save-new-order right">保存 </a>
-	<a href="#dialog-form" class="print right save-temp-order">一時保存 </a> 
+	<a class="print left" id="insert">行挿入 </a>
+	<a class="print left" id="remove">行削除 </a>
+	<a class="print save-new-order right">保存 </a>
+	<a class="print right save-temp-order">一時保存 </a> 
 </div>
 <div class="row margin-bottom-table margin-top-table ">
 	<a href="<?php echo site_url('receive-order');?>" style="float:right" class="print">戻る  </a>

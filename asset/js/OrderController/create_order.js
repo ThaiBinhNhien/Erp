@@ -64,9 +64,9 @@ $(document).ready(function(){
 		refreshSum();
 		
 		return false;
-	})
+	});
 	
-
+ 
 	$(document).on("click","#create-table > tbody > tr:not(.sum-col)",function(){
 		$(this).parent().find("tr.selected").removeClass("selected");
 		$(this).addClass("selected");
@@ -115,6 +115,7 @@ $(document).ready(function(){
 				}
 				end_floor = temp_index;
 			}
+
 			if(start_index > begin_floor){
 				for(;begin_floor < start_index;begin_floor++){
 					$('td[data-floor="'+begin_floor+'F"]').remove();
@@ -129,6 +130,7 @@ $(document).ready(function(){
 					$("#create-table > thead > tr >th:nth-child("+(5+parseInt(index))+")").after('<th data-floor="'+ start_index +'F">'+ start_index +'F</th>');
 					$("#create-table > tbody > tr:not(.sum-col) > td:nth-child("+(5+parseInt(index))+")").after('<td data-floor="'+ start_index +'F"><input type="text" class="floor_input" name="_'+ start_index +'F" /></td>');
 					$("#create-table > tbody > tr.sum-col > td:nth-child("+(5+parseInt(index))+")").after('<td data-floor="'+ start_index +'F">0</td>');
+					index += 1;
 				}
 				begin_floor = temp_index;
 			}
@@ -259,7 +261,7 @@ $(document).ready(function(){
 							$('input[name="product_item_'+numberRow+'"]').inputpicker({
 						        width:'400px',
 						        url: productSearchUrl,
-						        urlParam : {"code":'{{q}}',"customer_id":$("#customer").val(),"base_id":base_id,"department_id":$("#customer_department").val()},
+						        urlParam : {"code":'{{q}}',"customer_id":$("#customer").val(),"base_id":$("#customer_department option:selected").data("base"),"department_id":$("#customer_department").val()},
 						        fields:[{"name":"sale_code", "text":"商品ID"}, 
 						        		{"name":"name", "text":"商品名"}, 
 						        		{"name":"standard", "text":"規格"}, 
@@ -400,8 +402,8 @@ $(document).ready(function(){
 		$('.save-new-order').helloWorld(msg,null,null,{
 					cancel_callback_function: 'cancel_click',
 					success_callback_function: 'ok_click',
-					ok_text: '保存',
-					cancel_text: '修正',
+					ok_text: 'OK',
+					cancel_text: 'キャンセル',
 					not_ajax: true
 				});
 		wait(msg,data);
@@ -419,8 +421,8 @@ $(document).ready(function(){
 				$('.save-new-order').helloWorld(msg,null,null,{
 					cancel_callback_function: 'cancel_click',
 					success_callback_function: 'ok_click',
-					ok_text: '保存',
-					cancel_text: '修正',
+					ok_text: 'OK',
+					cancel_text: 'キャンセル',
 					not_ajax: true
 				});
 				wait(msg,data);
@@ -508,8 +510,9 @@ $(document).ready(function(){
 		if(!isNaN(parseFloat(val))){
 			$(this).val(parseFloat($(this).val()).toFixed(2));
 		}else{
-			if(val != null && val != '')
+			if(val != null && val != ''){
 				$(this).val(parseFloat("0.00"));
+			}
 		}
 		
 		//row
@@ -541,7 +544,12 @@ $(document).ready(function(){
 				total_addition += parseFloat(val);
 			}
 		});
-		parent.find('td').last().text(total_on_row.toFixed(2));
+		//if(val == ''){
+			//parent.find('td').last().text("");
+		//}else{
+			parent.find('td').last().text(total_on_row.toFixed(2));
+		//}
+		
 		parent.parent().find('tr.sum-col').find('td[data-floor="'+subName.substring(1)+'"]').text(total_on_column.toFixed(2));
 		parent.parent().find('tr:not(.sum-col)').each(function(){
 			var val = parseFloat($(this).find('td').last().text());
@@ -607,13 +615,14 @@ $(document).ready(function(){
 	}); 
 
 	$(document).on("change","#customer",function(){
-		var id = $(this).val();
-		var valDepartment = $("#customer_department").val();
+		var id = $(this).val(); 
+		$("#customer_department").val("");
 		if(id == null || id == ''){
 			return;
 		}
 		var customer_previous = $("#customer").data("previous");
 		if(customer_previous != id){
+			
 			if(customer_previous != null && customer_previous != ''){
 				var msg = "得意先を変更すると下記選択した商品が全てリセットされます。よろしいでしょうか？";
 				$('.save-new-order').helloWorld(msg,null,null,{
@@ -627,7 +636,7 @@ $(document).ready(function(){
 
 			}else{
 				$("#customer").data("previous",id);
-				$('.productselect1').inputpicker({
+				/*$('.productselect1').inputpicker({
 			        width:'400px',
 			        url: productSearchUrl,
 			        urlParam : {"code":'{{q}}',"customer_id":$("#customer").val(),"base_id":base_id,"department_id":$("#customer_department").val()},
@@ -642,7 +651,7 @@ $(document).ready(function(){
 			        autoOpen: true,
 			        headShow: true,
 			        pagination: false,   // false: no
-			    });
+			    });*/
 				$.ajax({
 					url:customerDepartmentUrl,
 					data:{customer_id:id},
@@ -652,7 +661,7 @@ $(document).ready(function(){
 						var option = '<option value=""></option>';
 						if(result != null){
 							for(var i=0;i<result.length;i++){
-								if(valDepartment != "" && valDepartment == result[i]['department_id'])
+								/*if(valDepartment != "" && valDepartment == result[i]['department_id'])
 									option += '<option selected value="'+result[i]['department_id']+'">'+result[i]['department']+'</option>';
 								else{
 									var selected = "";
@@ -661,16 +670,23 @@ $(document).ready(function(){
 										$("#customer_department").data("previous",result[i]['department_id']);
 									}
 									option += '<option '+selected+' value="'+result[i]['department_id']+'">'+result[i]['department']+'</option>';
+								}*/
+
+								var selected = "";
+								if(i == 0){
+									selected = 'selected';
+									$("#customer_department").data("previous",result[i]['department_id']);
 								}
+								option += '<option '+selected+' value="'+result[i]['department_id']+'" data-base="'+result[i]['base_code']+'">'+result[i]['department']+'</option>';
 
 							}
 						}
 						$("#customer_department").html(option);
-						if(is_customer == 1){
+						//if(is_customer == 1){
 								$('.productselect1').inputpicker({
 							        width:'400px',
 							        url: productSearchUrl,
-							        urlParam : {"code":'{{q}}',"customer_id":$("#customer").val(),"base_id":base_id,"department_id":$("#customer_department").val()},
+							        urlParam : {"code":'{{q}}',"customer_id":$("#customer").val(),"base_id":$("#customer_department option:selected").data("base"),"department_id":$("#customer_department").val()},
 							        fields:[{"name":"sale_code", "text":"商品ID"}, 
 							        		{"name":"name", "text":"商品名"}, 
 							        		{"name":"standard", "text":"規格"}, 
@@ -684,7 +700,7 @@ $(document).ready(function(){
 							        pagination: false,   // false: no
 							    });
 
-						}
+						//}
 
 					}
 				});
@@ -715,8 +731,7 @@ $(document).ready(function(){
 		$("#create-table > tbody > tr:not(.sum-col) ").each(function(){
 			$(this).remove();
 		})
-		addNewRow();
-		refreshSum();
+		
 		var id = $("#customer").val();
 		var valDepartment = $("#customer_department").val();
 		$.ajax({
@@ -728,14 +743,18 @@ $(document).ready(function(){
 					var option = '<option value=""></option>';
 					if(result != null){
 						for(var i=0;i<result.length;i++){
-							if(valDepartment != "" && valDepartment == result[i]['department_id'])
-								option += '<option selected value="'+result[i]['department_id']+'">'+result[i]['department']+'</option>';
-							else
-								option += '<option value="'+result[i]['department_id']+'">'+result[i]['department']+'</option>';
+							var selected = "";
+								if(i == 0){
+									selected = 'selected';
+									$("#customer_department").data("previous",result[i]['department_id']);
+								}
+								option += '<option '+selected+' value="'+result[i]['department_id']+'" data-base="'+result[i]['base_code']+'">'+result[i]['department']+'</option>';
 						}
 					}
+					
 					$("#customer_department").html(option);
-
+					addNewRow();
+					refreshSum();
 				}
 			});
 			$.ajax({
@@ -760,14 +779,20 @@ $(document).ready(function(){
 		$("#customer").val(customer_previous).change();
 	}
 
-	$("#customer_department").change(function(){
-		if(is_customer == 1){
+	var previous_base;
+	$("#customer_department").on('focus', function () {
+        // Store the current value on focus and on change
+        previous_base = $("#customer_department option:selected").data("base");
+    }).change(function(){
+		//if(is_customer == 1){
 			var id = $(this).val();
 			var department_previous = $("#customer_department").data("previous");
+			var data_base = $("#customer_department option:selected").data("base");
 			if(id == null || id == ''){
 				return;
 			}
-			if(department_previous != id){
+
+			if(department_previous != id && previous_base != data_base){
 				if(department_previous != null && department_previous != ''){
 					var msg = "部署を変更すると下記選択した商品が全てリセットされます。よろしいでしょうか？";
 					$('.save-new-order').helloWorld(msg,null,null,{
@@ -781,7 +806,7 @@ $(document).ready(function(){
 
 				}
 			}
-		}
+		//}
 
 	})
 
@@ -806,14 +831,15 @@ $(document).ready(function(){
 		if(begin_floor <= end_floor){
 			var temp_begin_floor = begin_floor;
 			var temp_end_floor = end_floor;
-			for(; temp_end_floor >= temp_begin_floor; temp_end_floor--){
-				new_row +='<td data-floor="'+ temp_end_floor +'F"><input type="text" class="floor_input" name="'+numberRow+'_'+ temp_end_floor +'F" /></td>';
+
+			for(; temp_end_floor >= temp_begin_floor; temp_begin_floor++){
+				new_row +='<td data-floor="'+ temp_begin_floor +'F"><input type="text" class="floor_input" name="'+numberRow+'_'+ temp_begin_floor +'F" /></td>';
 			}
 		}else{
 			new_row += '<td class="temp"></td>';
 		}
 		
-		new_row +='<td class="no-sum-col six-col addition"><input type="text" class="input_addition" name="addition'+numberRow+'" /></td><td class="no-sum-col sev-col"></td></tr>'
+		new_row +='<td class="no-sum-col six-col addition"><input type="text" class="input_addition" name="addition'+numberRow+'" /></td><td class="no-sum-col sev-col">0.00</td></tr>'
 		
 		var selected_row = $("#create-table > tbody > tr.selected").length;
 		if(selected_row > 0) {
@@ -828,7 +854,7 @@ $(document).ready(function(){
 		$('input[name="product_item_'+numberRow+'"]').inputpicker({
 	        width:'400px',
 	        url: productSearchUrl,
-	        urlParam : {"code":'{{q}}',"customer_id":$("#customer").val(),"base_id":base_id,"department_id":$("#customer_department").val()},
+	        urlParam : {"code":'{{q}}',"customer_id":$("#customer").val(),"base_id":$("#customer_department option:selected").data("base"),"department_id":$("#customer_department").val()},
 	        fields:[{"name":"sale_code", "text":"商品ID"}, 
 	        		{"name":"name", "text":"商品名"}, 
 	        		{"name":"standard", "text":"規格"}, 
@@ -872,7 +898,7 @@ $(document).ready(function(){
 			$('.productselect1').inputpicker({
 		        width:'400px',
 		        url: productSearchUrl,
-		        urlParam : {"code":'{{q}}',"customer_id":$("#customer").val(),"base_id":base_id,"department_id":$("#customer_department").val()},
+		        urlParam : {"code":'{{q}}',"customer_id":$("#customer").val(),"base_id":$("#customer_department option:selected").data("base"),"department_id":$("#customer_department").val()},
 		        fields:[{"name":"sale_code", "text":"商品ID"}, 
 		        		{"name":"name", "text":"商品名"}, 
 		        		{"name":"standard", "text":"規格"}, 
@@ -1107,5 +1133,9 @@ $(document).on("change","#create-table > tbody > tr > td input.productselect1",f
 			$('#insert').click();
 		}
 	});
+
+	
+
+	
 
 

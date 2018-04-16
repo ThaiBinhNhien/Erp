@@ -66,6 +66,6 @@
 </div>
 <script>
 	var message_error_not_select_date_import_inventory = "<?= $this->lang->line('message_error_not_select_date_import_inventory') ?>";
-	var Our_Accounts_Payable_Details = "<?= site_url('/pdf_details_buy')?>";
+	var Our_Accounts_Payable_Details = "<?= site_url('/pdf_details_buy_buying')?>";
 	var url_check_price = "<?= site_url('/purchase/detailDebt')?>";
 </script>

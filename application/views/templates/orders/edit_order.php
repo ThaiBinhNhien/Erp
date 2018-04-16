@@ -2,15 +2,12 @@
 .wrapper-contain form{
     margin:0 !important;
 }
- .inputpicker-overflow-hidden{
+.inputpicker-overflow-hidden{
   height:100%;
  }
-
-
 th{
   line-height: 32px;
 }
-
 .full-width{
     width:557px;
     min-width:40px;
@@ -23,6 +20,22 @@ input::-ms-clear {
 }
 .floor_input{
   min-width:40px !important;
+}
+button{
+  height:31px;
+}
+.btn-group{
+  width: calc(100% - 25px) !important;
+}
+.filter-option{
+  margin-top:-1%;
+}
+
+.no-sum-col, .sev-col{
+  line-height: 2.5;
+}
+.productselect1 {
+  text-align: center;
 }
 </style>
 <div class="wrapper-contain order edit-order detail-order">
@@ -53,7 +66,7 @@ input::-ms-clear {
         <div class="form-group">
           <label name="lb-deliver" class="col-md-4 control-label">起票者:</label>
           <div class="col-md-8">
-			  <input value="帝王太郎" disabled name="deliver" class="hide-input"/>
+			  <input value="<?= $master['user_name'] ?>" disabled name="deliver" class="hide-input"/>
           </div>
         </div>
       </div>
@@ -90,9 +103,9 @@ input::-ms-clear {
           <label  class="col-md-4 control-label">部署名:</label>
           <div class="col-md-8">
             <select class="form-control" name="customer_department" data-previous="<?= $master[SL_DEPARTMENT_CODE] ?>" id="customer_department">
-               <option value=""></option>
+               <option value=""></option> 
                  <?php foreach ($department as $key => $value) {
-                  echo '<option value="'.$value[CD_DEPARTMENT_CODE].'" '.($value[CD_DEPARTMENT_CODE]==$master[SL_DEPARTMENT_CODE]?'selected':'').' >'.$value[DL_DEPARTMENT_NAME].'</option>';
+                  echo '<option value="'.$value[CD_DEPARTMENT_CODE].'" data-base="'.$value["base_code"].'" '.($value[CD_DEPARTMENT_CODE]==$master[SL_DEPARTMENT_CODE]?'selected':'').' >'.$value[DL_DEPARTMENT_NAME].'</option>';
                 }
                 ?>
             </select>
@@ -146,7 +159,7 @@ input::-ms-clear {
                                 <th class="six-col width-th">追加</th>
                                 <th class="sev-col width-th">合計</th>
                             </tr>
-                        </thead>
+                        </thead> 
                         <tbody>
       
                             <?php $sum_total = 0;
@@ -221,7 +234,7 @@ input::-ms-clear {
                     <a href="" class="print left" id="remove">行削除  </a>
                    
                     <a href="#dialog-form" class="print right" id="save_order">保存  </a>  
-                     <a href="<?php echo site_url('order/detail-order');?>" class="print right">戻る   </a>
+                     <a href="<?php echo site_url('order/detail-order?id=');?><?= $master[SL_ID] ?>" class="print right">戻る   </a>
                 </div>
                 </div>
 </div>
@@ -283,7 +296,7 @@ table input, table select{
     var customerDepartmentUrl = "<?= base_url("customer/get-department") ?>";
     var date_update = "<?= $master[SL_UPDATE_DATE] ?>";
      var base_id = "<?= $base_id ?>";
-      var is_customer = <?= $is_customer ?>;
+      var is_customer = "<?= $is_customer ?>";
 </script>
 <!--End wrapper contain --->   
 
