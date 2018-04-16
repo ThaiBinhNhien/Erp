@@ -32,7 +32,7 @@ $LOGIN_INFO = $this->session->userdata('login-info');
     <ul>
         <li <?php if($this->router->fetch_class()=='AdminController'){ echo 'class="active"';} ?>><a href="<?php echo site_url(); ?>"><i class="icon-home"></i><span>Home</span> </a></li>
         <li <?php if($this->router->fetch_class()=='OrderController'){ echo 'class="active"';} ?> ><a target="_blank"    href="<?php echo site_url('receive-order');?>"><i class="icon-tag"></i><span> 注文管理 </span> </a>
-        <a id="drop-1"class="down" href="#" ><span class="glyphicon glyphicon-chevron-left"></span></a>   
+          
             <ul>
                 <li><a target="_blank"   href="<?php echo site_url('receive-order');?>">注文伝票</a></li>
                 <li><a target="_blank"   href="<?php echo site_url('receive-order');?>/checklist">チェックリスト</a></li>
@@ -40,7 +40,7 @@ $LOGIN_INFO = $this->session->userdata('login-info');
         
         </li> 
          <li <?php if($this->router->fetch_class()=='SaleController'){ echo 'class="active"';} ?>><a target="_blank"  href="<?php echo site_url('sale');?>"><i class="icon-money"></i><span>売上管理  </span> </a>
-            <a id="drop-3"class="down" href="#" ><span class="glyphicon glyphicon-chevron-left"></span></a> 
+            
             <ul>
                 <li><a target="_blank"   href="<?php echo site_url('sale');?>">未請求注文伝票管理</a></li>
                 <li><a target="_blank"   href="<?php echo site_url('sale');?>/created_sale">作成済請求書管理</a></li>
@@ -52,11 +52,11 @@ $LOGIN_INFO = $this->session->userdata('login-info');
        
 		<li <?php if($this->router->fetch_class()=='ShipmentController'){ echo 'class="active"';} ?>>
             <a target="_blank"   href="<?php echo site_url('shipment');?>"><i class=" icon-external-link"></i><span>受発注管理 </span> </a>
-  			<a id="drop-2"class="down" href="#" ><span class="glyphicon glyphicon-chevron-left"></span></a> 
+  			
         </li>
          
          <li <?php if($this->router->fetch_class()=='PurchaseController'){ echo 'class="active"';} ?>><a target="_blank" href="<?php echo site_url('purchase');?>"><i class="icon-inbox"></i><span>仕入管理 </span> </a>
-            <a id="drop-4"class="down" href="#" ><span class="glyphicon glyphicon-chevron-left"></span></a> 
+           
             <ul>
                 <li><a target="_blank"   href="<?php echo site_url('purchase');?>">仕入管理</a></li>
                 <li><a target="_blank"   href="<?php echo site_url('purchase');?>/export-purchase">出庫管理</a></li>
@@ -64,7 +64,7 @@ $LOGIN_INFO = $this->session->userdata('login-info');
             </ul>   
         </li>
         <li <?php if(($this->router->fetch_class()=='BusinessController') || ($this->router->fetch_class()=='OperationController')){ echo 'class="active"';} ?>><a target="_blank"  href="<?php echo site_url('business-management');?>"><i class="icon-book"></i><span>業務管理  </span> </a>
-            <a id="drop-5"class="down" href="#" ><span class="glyphicon glyphicon-chevron-left"></span></a>  
+           
 			<ul>
                 <li><a target="_blank"   href="<?php echo site_url('business-management');?>">営業管理</a></li>
                 <li><a target="_blank"   href="<?php echo site_url('business');?>/inventory">在庫管理</a></li>
@@ -76,7 +76,7 @@ $LOGIN_INFO = $this->session->userdata('login-info');
 
              echo 'class="active"';} ?>>
         <a target="_blank"  href="<?php echo site_url('master');?>"><i class=" icon-th"></i><span>マスタ管理  </span> </a>
-            <a id="drop-6"class="down" href="#" ><span class="glyphicon glyphicon-chevron-left"></span></a> 
+           
         </li>
        
     </ul>
