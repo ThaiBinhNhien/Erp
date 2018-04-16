@@ -1298,7 +1298,8 @@ jQuery.validator.setDefaults({
 
 // Notifition
 //var config_location_hostname = 'http://'+window.location.hostname+':3000';
-var config_location_hostname = 'https://erptolinennode.appspot.com/';
+//var config_location_hostname = 'https://erptolinennode.appspot.com/';
+var config_location_hostname = 'http://erp-tolinen.vietvang.net:3000/';
 function add_notification_realtime(data){
     var socket = io.connect(config_location_hostname);
 
